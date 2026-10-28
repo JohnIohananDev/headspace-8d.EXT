@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>HeadSpace</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="stars" id="stars" aria-hidden="true"></div>
+
+  <div class="plugin-wrapper">
+
+    <header class="header">
+      <div class="brand">
+        <div id="statusIndicator" class="led"></div>
+        <h1>HeadSpace</h1>
+      </div>
+
+      <div class="header-actions">
+        <div class="lang-switch" role="group" aria-label="Language">
+          <button type="button" class="lang-btn" id="langPt" data-lang="pt">PT</button>
+          <button type="button" class="lang-btn" id="langEn" data-lang="en">EN</button>
+        </div>
+        <button id="toggleBtn" class="power-btn" data-i18n-title="powerTitle" title="Ligar / desligar o motor">
+          <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path>
+            <line x1="12" y1="2" x2="12" y2="12"></line>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <section class="hero" id="hero">
+      <div class="orbit" id="orbit" title="Clique ou arraste aqui para posicionar o áudio manualmente">
+        <span class="side side-l">L</span>
+        <span class="side side-r">R</span>
+        <span class="ring"></span>
+        <span class="ring-inner"></span>
+        <span class="core"></span>
+        <span class="sat" id="sat"></span>
+      </div>
+      <div class="hero-status-row">
+        <span id="statusText" class="status-off">Bypass</span>
+        <button type="button" id="unlockOrbitBtn" class="unlock-pill" style="display: none;" data-i18n="unlockOrbit">↻ Voltar a girar</button>
+      </div>
+    </section>
+
+    <div class="move-bar" id="moveBar" style="display: none;">
+      <span data-i18n="moveText">O efeito está em outra aba.</span>
+      <button type="button" id="moveBtn" class="move-btn" data-i18n="moveBtn">Usar nesta aba</button>
+    </div>
+
+    <div class="preset-row">
+      <label for="presetSelect" data-i18n="preset">Preset</label>
+      <select id="presetSelect" class="clean-select">
+        <optgroup data-i18n-label="grpClassic" label="Clássicos">
+          <option value="8d-rotation" data-i18n="p_8d">8D Clássico</option>
+          <option value="slowed-reverb" data-i18n="p_slowedReverb">Slowed + Reverb 🐌</option>
+          <option value="nightcore" data-i18n="p_nightcore">Speed Up / Nightcore ⚡</option>
+          <option value="slow-ambient" data-i18n="p_slow">Ambiente Lento</option>
+          <option value="fast-spin" data-i18n="p_fast">Rotação Rápida</option>
+          <option value="live-stadium" data-i18n="p_stadium">Show em Estádio 360°</option>
+          <option value="front-stage" data-i18n="p_stage">Palco Ao Vivo</option>
+          <option value="vortex-3d" data-i18n="p_vortex">Vórtice 3D</option>
+          <option value="center-focus" data-i18n="p_center">Foco Central (Fixo)</option>
+          <option value="bounce" data-i18n="p_bounce">Bounce Dinâmico</option>
+          <option value="bass-boost" data-i18n="p_bass">Bass Boosted</option>
+          <option value="concert-hall" data-i18n="p_concert">Sala de Concerto</option>
+          <option value="studio" data-i18n="p_studio">Monitor de Estúdio</option>
+        </optgroup>
+        <optgroup data-i18n-label="grpRelax" label="Relaxantes">
+          <option value="cosmic-drift" data-i18n="p_cosmic">Deriva Cósmica</option>
+          <option value="nebula" data-i18n="p_nebula">Nebulosa</option>
+          <option value="deep-ocean" data-i18n="p_ocean">Oceano Profundo</option>
+          <option value="night-rain" data-i18n="p_rain">Chuva Noturna</option>
+          <option value="deep-sleep" data-i18n="p_sleep">Sono Profundo</option>
+        </optgroup>
+        <optgroup data-i18n-label="grpRetro" label="Retrô & Rádio">
+          <option value="walkman-90s" data-i18n="p_walkman">Walkman Anos 90 8D</option>
+          <option value="old-radio" data-i18n="p_radio">Rádio Velho 8D (com chiado)</option>
+          <option value="old-radio-clean" data-i18n="p_radioClean">Rádio Velho 8D (limpo)</option>
+          <option value="am-radio" data-i18n="p_amRadio">Rádio AM Anos 50</option>
+          <option value="vinyl-night" data-i18n="p_vinyl">Noite de Vinil</option>
+          <option value="vhs-tape" data-i18n="p_vhs">Fita VHS Nostálgica</option>
+          <option value="lofi-tape" data-i18n="p_tape">Lo-fi Fita Cassete</option>
+          <option value="underwater-8d" data-i18n="p_underwater">Submerso (Debaixo d'água)</option>
+          <option value="party-next-door" data-i18n="p_muffled">Festa ao Lado (Abafado)</option>
+          <option value="phone-8d" data-i18n="p_phone">Telefone 8D</option>
+        </optgroup>
+        <option value="custom" data-i18n="p_custom">Personalizado...</option>
+      </select>
+    </div>
+
+    <nav class="tabs">
+      <button class="tab active" data-target="panel-space" data-i18n="tabSpace">Espaço</button>
+      <button class="tab" data-target="panel-tone" data-i18n="tabTone">Tom</button>
+      <button class="tab" data-target="panel-fx" data-i18n="tabFx">Efeitos</button>
+      <button class="tab" data-target="panel-brain" data-i18n="tabMind">Mente</button>
+      <button class="tab" data-target="panel-tape" data-i18n="tabRec">Gravar</button>
+    </nav>
+
+    <main class="panels">
+      <div id="panel-space" class="panel active">
+        <div class="control-group">
+          <label for="spatialMode" data-i18n="engine3d">Engine 3D</label>
+          <select id="spatialMode" class="clean-select block">
+            <option value="hrtf" data-i18n="modeHrtf">Binaural HRTF (Imersão Total)</option>
+            <option value="surround" data-i18n="modeSurround">Surround 3-Bandas</option>
+            <option value="standard" data-i18n="modeStereo">Estéreo Simples</option>
+          </select>
+        </div>
+
+        <div class="control-group" id="hrtfPathContainer">
+          <label for="hrtfPath" data-i18n="path">Trajetória</label>
+          <select id="hrtfPath" class="clean-select block">
+            <option value="orbit" data-i18n="pathOrbit">Órbita Circular</option>
+            <option value="figure8" data-i18n="pathFig8">Figura em 8</option>
+            <option value="spiral" data-i18n="pathSpiral">Espiral (aproxima e afasta)</option>
+            <option value="vortex" data-i18n="pathVortex">Vórtice 3D (sobe e desce)</option>
+            <option value="stage" data-i18n="pathStage">Palco Frontal (ao vivo)</option>
+            <option value="stadium" data-i18n="pathStadium">Arena / Estádio 360°</option>
+            <option value="heartbeat" data-i18n="pathHeartbeat">Pulso Cardíaco</option>
+            <option value="pendulum" data-i18n="pathPendulum">Pêndulo (balanço suave)</option>
+            <option value="halo" data-i18n="pathHalo">Halo (acima da cabeça)</option>
+            <option value="drift" data-i18n="pathDrift">Wander (Aleatório)</option>
+            <option value="zigzag" data-i18n="pathZigzag">Zigue-zague</option>
+            <option value="chaos" data-i18n="pathChaos">Caos Total</option>
+          </select>
+        </div>
+
+        <div class="control-group">
+          <label data-i18n="spinDir">Lado / Direção do Giro 8D</label>
+          <div class="dir-pills" role="group">
+            <button type="button" class="dir-pill active" data-dir="cw" data-i18n="dirCw">↻ Direita (Horário)</button>
+            <button type="button" class="dir-pill" data-dir="ccw" data-i18n="dirCcw">↺ Esquerda (Anti-hor.)</button>
+            <button type="button" class="dir-pill" data-dir="pingpong" data-i18n="dirPing">⇄ Vai e Volta</button>
+          </div>
+          <select id="direction" style="display: none;">
+            <option value="cw">cw</option>
+            <option value="ccw">ccw</option>
+            <option value="pingpong">pingpong</option>
+          </select>
+        </div>
+
+        <div class="slider-group">
+          <div class="slider-info"><label for="intensity" data-i18n="depth">Profundidade</label><span id="val_intensity" class="val-mono">100%</span></div>
+          <input type="range" id="intensity" class="pro-slider" min="0" max="100" value="100">
+        </div>
+
+        <div class="slider-group">
+          <div class="slider-info"><label for="speed" data-i18n="speed">Velocidade (Giro)</label><span id="val_speed" class="val-mono">15%</span></div>
+          <input type="range" id="speed" class="pro-slider" min="0" max="100" value="15">
+        </div>
+      </div>
+
+      <div id="panel-tone" class="panel">
+        <div class="slider-group" style="border-color: rgba(143, 233, 255, 0.4);">
+          <div class="slider-info"><label for="playbackSpeed" data-i18n="playbackSpeed" style="color: var(--aqua); font-weight: bold;">Música: Slowed / Speed Up</label><span id="val_playbackSpeed" class="val-mono">1.00x</span></div>
+          <input type="range" id="playbackSpeed" class="pro-slider" min="50" max="150" value="100">
+        </div>
+
+        <div class="slider-group">
+          <div class="slider-info"><label for="bass" data-i18n="bass">Graves</label><span id="val_bass" class="val-mono">40%</span></div>
+          <input type="range" id="bass" class="pro-slider" min="0" max="100" value="40">
+        </div>
+
+        <div class="slider-group">
+          <div class="slider-info"><label for="clarity" data-i18n="treble">Agudos</label><span id="val_clarity" class="val-mono">50%</span></div>
+          <input type="range" id="clarity" class="pro-slider" min="0" max="100" value="50">
+        </div>
+
+        <div class="slider-group">
+          <div class="slider-info"><label for="warmth" data-i18n="warmth">Calor (som aveludado)</label><span id="val_warmth" class="val-mono">0%</span></div>
+          <input type="range" id="warmth" class="pro-slider" min="0" max="100" value="0">
+        </div>
+
+        <div class="slider-group">
+          <div class="slider-info"><label for="reverb" data-i18n="room">Reverb (Tamanho da sala)</label><span id="val_reverb" class="val-mono">25%</span></div>
+          <input type="range" id="reverb" class="pro-slider" min="0" max="100" value="25">
+        </div>
+
+        <div class="control-group">
+          <label for="reverbType" data-i18n="reverbType">Tipo de reverb</label>
+          <select id="reverbType" class="clean-select block">
+            <option value="classic" data-i18n="rvClassic">Sala (clássico)</option>
+            <option value="hall" data-i18n="rvHall">Salão</option>
+            <option value="cathedral" data-i18n="rvCathedral">Catedral</option>
+            <option value="space" data-i18n="rvSpace">Espaço profundo</option>
+          </select>
+        </div>
+      </div>
+
+      <div id="panel-fx" class="panel">
+        <div class="control-group">
+          <label for="character" data-i18n="character">Efeito de Rádio / Época (junto com 8D)</label>
+          <select id="character" class="clean-select block">
+            <option value="off" data-i18n="chOff">Desligado</option>
+            <option value="walkman" data-i18n="chWalkman">Walkman Anos 90</option>
+            <option value="radio" data-i18n="chRadio">Rádio velho (limpo)</option>
+            <option value="radio-noise" data-i18n="chRadioNoise">Rádio velho (com chiado)</option>
+            <option value="radio-am" data-i18n="chRadioAm">Rádio AM Anos 50</option>
+            <option value="vinyl" data-i18n="chVinyl">Vinil antigo (chiado e estalos)</option>
+            <option value="tape" data-i18n="chTape">Fita cassete Lo-Fi</option>
+            <option value="vhs" data-i18n="chVhs">Fita VHS antiga</option>
+            <option value="gramophone" data-i18n="chGramophone">Gramofone clássico</option>
+            <option value="phone" data-i18n="chPhone">Telefone suave</option>
+            <option value="underwater" data-i18n="chUnderwater">Submerso (debaixo d'água)</option>
+            <option value="muffled" data-i18n="chMuffled">Abafado (festa ao lado)</option>
+          </select>
+
+          <div class="slider-info inline">
+            <label for="characterAmount" data-i18n="charAmount">Intensidade do efeito</label><span id="val_characterAmount" class="val-mono">100%</span>
+          </div>
+          <input type="range" id="characterAmount" class="pro-slider" min="0" max="100" value="100">
+
+          <div id="radioCustomBox" class="radio-sub-box">
+            <div class="slider-info inline">
+              <label for="charTone" data-i18n="charTone">Filtro do Rádio (Abafado ↔ Aberto)</label><span id="val_charTone" class="val-mono">60%</span>
+            </div>
+            <input type="range" id="charTone" class="pro-slider" min="0" max="100" value="60">
+
+            <div class="slider-info inline">
+              <label for="charDrive" data-i18n="charDrive">Saturação / Válvula</label><span id="val_charDrive" class="val-mono">25%</span>
+            </div>
+            <input type="range" id="charDrive" class="pro-slider" min="0" max="100" value="25">
+
+            <div class="slider-info inline">
+              <label for="charNoise" data-i18n="charNoise">Chiado e Estalos</label><span id="val_charNoise" class="val-mono">35%</span>
+            </div>
+            <input type="range" id="charNoise" class="pro-slider" min="0" max="100" value="35">
+          </div>
+        </div>
+
+        <div class="slider-group">
+          <div class="slider-info"><label for="chorus" data-i18n="ethereal">Etéreo (chorus)</label><span id="val_chorus" class="val-mono">0%</span></div>
+          <input type="range" id="chorus" class="pro-slider" min="0" max="100" value="0">
+        </div>
+
+        <div class="slider-group">
+          <div class="slider-info"><label for="echo" data-i18n="echo">Eco ping-pong</label><span id="val_echo" class="val-mono">0%</span></div>
+          <input type="range" id="echo" class="pro-slider" min="0" max="100" value="0">
+        </div>
+
+        <div class="slider-group">
+          <div class="slider-info"><label for="waves" data-i18n="tide">Maré (filtro respirando)</label><span id="val_waves" class="val-mono">0%</span></div>
+          <input type="range" id="waves" class="pro-slider" min="0" max="100" value="0">
+        </div>
+      </div>
+
+      <div id="panel-brain" class="panel">
+        <div class="control-group">
+          <label for="ambience" data-i18n="ambience">Som ambiente</label>
+          <select id="ambience" class="clean-select block">
+            <option value="off" data-i18n="chOff">Desligado</option>
+            <option value="rain" data-i18n="ambRain">Chuva</option>
+            <option value="ocean" data-i18n="ambOcean">Ondas do mar</option>
+            <option value="wind" data-i18n="ambWind">Vento</option>
+            <option value="brown" data-i18n="ambBrown">Ruído marrom (calmante)</option>
+            <option value="drone" data-i18n="ambDrone">Drone cósmico</option>
+          </select>
+          <div class="slider-info inline">
+            <label for="ambienceVol" data-i18n="ambVol">Volume do ambiente</label><span id="val_ambienceVol" class="val-mono">35%</span>
+          </div>
+          <input type="range" id="ambienceVol" class="pro-slider" min="0" max="100" value="35">
+        </div>
+
+        <div class="toggle-card">
+          <div class="toggle-info">
+            <label for="binauralToggle" data-i18n="binaural">Ondas binaurais</label>
+            <span class="sub" id="binauralStatus">Frequências cerebrais de fundo</span>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="binauralToggle">
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="control-group">
+          <label for="binauralPreset" data-i18n="mentalState">Estado mental</label>
+          <select id="binauralPreset" class="clean-select block">
+            <option value="focus" data-i18n="bFocus">Foco Extremo (Beta)</option>
+            <option value="relax" data-i18n="bRelax">Relaxamento (Alfa)</option>
+            <option value="meditate" data-i18n="bMeditate">Meditação (Teta)</option>
+            <option value="sleep" data-i18n="bSleep">Sono Profundo (Delta)</option>
+          </select>
+        </div>
+        <p class="hint" data-i18n="binauralHint">Use fones de ouvido: as ondas binaurais só funcionam com um som diferente em cada ouvido.</p>
+      </div>
+
+      <div id="panel-tape" class="panel">
+        <div class="control-group">
+          <label for="recordFormat" data-i18n="outFormat">Formato de saída (Sem Vídeo)</label>
+          <select id="recordFormat" class="clean-select block">
+            <option value="compressed" data-i18n="fmtWebm">Áudio Leve (M4A / WebM)</option>
+            <option value="wav" data-i18n="fmtWav">WAV Áudio (sem compressão)</option>
+          </select>
+        </div>
+
+        <div class="tape-display">
+          <span id="recordTimer" class="tape-timer">00:00:00</span>
+        </div>
+
+        <div class="action-buttons">
+          <button id="recordBtn" class="btn-rec">
+            <span class="rec-dot"></span> <span id="recordBtnText">REC</span>
+          </button>
+          <button id="downloadBtn" class="btn-action" style="display: none;" data-i18n="saveBtn">Salvar no computador</button>
+        </div>
+      </div>
+
+    </main>
+
+    <footer class="footer">
+      <div class="footer-links">
+        <a id="kofiBtn" class="link-btn kofi" href="https://ko-fi.com/wohn37" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" aria-hidden="true"><path d="M3 8h13v7a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V8zm13 1.5h2.2a2.8 2.8 0 0 1 0 5.6H16v-1.6h2.2a1.2 1.2 0 0 0 0-2.4H16V9.5zM8.2 17.2l-2-1.9a1.5 1.5 0 0 1 2-2.2l.1.1.1-.1a1.5 1.5 0 0 1 2 2.2l-2.2 1.9z"/></svg>
+          <span data-i18n="kofi">Apoie no Ko-fi</span>
+        </a>
+        <a id="githubBtn" class="link-btn github" href="https://github.com/JohnIohananDev" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 16 16" width="15" height="15" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 0 1 4 0c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+          <span>GitHub</span>
+        </a>
+      </div>
+      <button id="resetBtn" class="btn-text" data-i18n="reset">Restaurar padrões</button>
+    </footer>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
