@@ -249,9 +249,3 @@ chrome.notifications.onClicked.addListener((id) => {
 });
 
 checkForUpdates();
-```
-
-**Como testar para ver se está funcionando?**
-Se você quiser ver como a notificação aparece no seu Windows/Mac, vá no seu arquivo `manifest.json` no seu computador e mude a `"version": "1.2.0"` para `"version": "1.1.0"` temporariamente. Como lá no GitHub a versão está `1.2.0`, a extensão vai achar que está desatualizada e vai estourar a notificação na sua tela! Só lembre de apagar as versões velhas pelo `chrome://extensions/` e carregar a pasta de novo.
-
-Depois de testar, para colocar essa novidade pros usuários, é só você substituir o código no seu arquivo `background.js` e subir ele novamente lá no seu repositório do GitHub (usando aquele mesmo botão de *Add file > Upload files* e arrastando esse arquivo pra lá para substituir o antigo).
