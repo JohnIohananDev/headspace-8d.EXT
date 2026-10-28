@@ -9,7 +9,6 @@
   <div class="stars" id="stars" aria-hidden="true"></div>
 
   <div class="plugin-wrapper">
-
     <header class="header">
       <div class="brand">
         <div id="statusIndicator" class="led"></div>
@@ -30,8 +29,10 @@
       </div>
     </header>
 
+    <a href="#" id="updateBanner" class="update-banner" style="display: none;" target="_blank" rel="noopener noreferrer"></a>
+
     <section class="hero" id="hero">
-      <div class="orbit" id="orbit" title="Clique ou arraste aqui para posicionar o áudio manualmente">
+      <div class="orbit" id="orbit">
         <span class="side side-l">L</span>
         <span class="side side-r">R</span>
         <span class="ring"></span>
@@ -307,7 +308,6 @@
           <button id="downloadBtn" class="btn-action" style="display: none;" data-i18n="saveBtn">Salvar no computador</button>
         </div>
       </div>
-
     </main>
 
     <footer class="footer">
@@ -321,7 +321,10 @@
           <span>GitHub</span>
         </a>
       </div>
-      <button id="resetBtn" class="btn-text" data-i18n="reset">Restaurar padrões</button>
+      <div class="footer-bottom">
+        <button id="resetBtn" class="btn-text" data-i18n="reset">Restaurar padrões</button>
+        <span id="versionDisplay" class="version-text"></span>
+      </div>
     </footer>
   </div>
 
