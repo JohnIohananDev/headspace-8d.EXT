@@ -8,29 +8,23 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.target === 'offscreen') return false;
 
   if (message.action === 'START_CAPTURE') {
-    startCapture()
-      .then(sendResponse)
-      .catch((err) => sendResponse({ error: err.message }));
+    startCapture().then(sendResponse).catch((err) => sendResponse({ error: err.message }));
     return true;
   }
 
   if (message.action === 'STOP_CAPTURE') {
-    stopCapture()
-      .then(sendResponse)
-      .catch((err) => sendResponse({ error: err.message }));
+    stopCapture().then(sendResponse).catch((err) => sendResponse({ error: err.message }));
     return true;
   }
 
   if (message.action === 'GET_STATUS') {
-    getStatus()
-      .then(sendResponse)
-      .catch(() => sendResponse({
-        isCapturing: false,
-        isRecording: false,
-        hasRecording: false,
-        recordStartedAt: 0,
-        activeTabId: null
-      }));
+    getStatus().then(sendResponse).catch(() => sendResponse({
+      isCapturing: false,
+      isRecording: false,
+      hasRecording: false,
+      recordStartedAt: 0,
+      activeTabId: null
+    }));
     return true;
   }
 
@@ -205,3 +199,59 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo) => {
     }
   } catch (e) {} finally { watchdogRunning = false; }
 });
+
+const REPO_MANIFEST_URL = 'https://raw.githubusercontent.com/JohnIohananDev/headspace-8d/main/manifest.json';
+const REPO_URL = 'https://github.com/JohnIohananDev/headspace-8d';
+
+async function checkForUpdates() {
+  try {
+    const { lastUpdateCheck } = await chrome.storage.local.get('lastUpdateCheck');
+    const now = Date.now();
+    if (lastUpdateCheck && (now - lastUpdateCheck < 43200000)) return;
+
+    const res = await fetch(REPO_MANIFEST_URL, { cache: 'no-store' });
+    if (!res.ok) return;
+    
+    const remoteManifest = await res.json();
+    const localVersion = chrome.runtime.getManifest().version;
+    const remoteVersion = remoteManifest.version;
+
+    if (remoteVersion !== localVersion && isNewerVersion(remoteVersion, localVersion)) {
+      chrome.notifications.create('headspace-update', {
+        type: 'basic',
+        iconUrl: 'icons/icon128.png',
+        title: 'HeadSpace 8D',
+        message: `Nova versão (${remoteVersion}) disponível no GitHub! Clique aqui para baixar.`,
+        priority: 2
+      });
+    }
+    await chrome.storage.local.set({ lastUpdateCheck: now });
+  } catch (e) {}
+}
+
+function isNewerVersion(remote, local) {
+  const r = remote.split('.').map(Number);
+  const l = local.split('.').map(Number);
+  for (let i = 0; i < Math.max(r.length, l.length); i++) {
+    const rv = r[i] || 0;
+    const lv = l[i] || 0;
+    if (rv > lv) return true;
+    if (rv < lv) return false;
+  }
+  return false;
+}
+
+chrome.notifications.onClicked.addListener((id) => {
+  if (id === 'headspace-update') {
+    chrome.tabs.create({ url: REPO_URL });
+    chrome.notifications.clear('headspace-update');
+  }
+});
+
+checkForUpdates();
+```
+
+**Como testar para ver se está funcionando?**
+Se você quiser ver como a notificação aparece no seu Windows/Mac, vá no seu arquivo `manifest.json` no seu computador e mude a `"version": "1.2.0"` para `"version": "1.1.0"` temporariamente. Como lá no GitHub a versão está `1.2.0`, a extensão vai achar que está desatualizada e vai estourar a notificação na sua tela! Só lembre de apagar as versões velhas pelo `chrome://extensions/` e carregar a pasta de novo.
+
+Depois de testar, para colocar essa novidade pros usuários, é só você substituir o código no seu arquivo `background.js` e subir ele novamente lá no seu repositório do GitHub (usando aquele mesmo botão de *Add file > Upload files* e arrastando esse arquivo pra lá para substituir o antigo).
