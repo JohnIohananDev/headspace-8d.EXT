@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
       powerTitle: 'Ligar / desligar o motor', unlockOrbit: '↻ Voltar a girar',
       moveText: 'O efeito está em outra aba.', moveBtn: 'Usar nesta aba',
       preset: 'Preset', grpClassic: 'Clássicos', grpRelax: 'Relaxantes', grpRetro: 'Retrô & Rádio',
-      p_8d: '8D Clássico', p_slowedReverb: 'Slowed + Reverb 🐌', p_nightcore: 'Speed Up / Nightcore ⚡', p_slow: 'Ambiente Lento', p_fast: 'Rotação Rápida',
+      p_8d: '8D Clássico', p_slowedReverb: 'Slowed + Reverb', p_nightcore: 'Speed Up / Nightcore', p_slow: 'Ambiente Lento', p_fast: 'Rotação Rápida',
       p_stadium: 'Show em Estádio 360°', p_stage: 'Palco Ao Vivo', p_vortex: 'Vórtice 3D',
       p_center: 'Foco Central (Fixo)', p_bounce: 'Bounce Dinâmico', p_bass: 'Bass Boosted',
       p_concert: 'Sala de Concerto', p_studio: 'Monitor de Estúdio',
@@ -40,13 +40,14 @@ document.addEventListener('DOMContentLoaded', () => {
       e_NO_TAB: 'Nenhuma aba ativa encontrada.', e_RESTRICTED_PAGE: 'O Chrome não permite capturar o áudio desta página.',
       e_NO_STREAM_ID: 'Não foi possível obter o áudio. Tente recarregar a página.', e_ENGINE_TIMEOUT: 'O motor de áudio não respondeu. Tente novamente.',
       e_ENGINE_NOT_READY: 'O motor de áudio não está ligado.', e_ALREADY_RECORDING: 'Já existe uma gravação em andamento.', e_NO_RECORDING: 'Nenhuma gravação disponível.',
-      e_NO_ENGINE: 'O motor de áudio não respondeu. Desligue e ligue de novo.'
+      e_NO_ENGINE: 'O motor de áudio não respondeu. Desligue e ligue de novo.',
+      updateAvail: '✨ Nova versão ({v}) disponível! Clique para baixar.'
     },
     en: {
       powerTitle: 'Turn the engine on / off', unlockOrbit: '↻ Resume spin',
       moveText: 'The effect is running on another tab.', moveBtn: 'Use this tab',
       preset: 'Preset', grpClassic: 'Classics', grpRelax: 'Relaxing', grpRetro: 'Retro & Radio',
-      p_8d: 'Classic 8D', p_slowedReverb: 'Slowed + Reverb 🐌', p_nightcore: 'Speed Up / Nightcore ⚡', p_slow: 'Slow Ambient', p_fast: 'Fast Spin',
+      p_8d: 'Classic 8D', p_slowedReverb: 'Slowed + Reverb', p_nightcore: 'Speed Up / Nightcore', p_slow: 'Slow Ambient', p_fast: 'Fast Spin',
       p_stadium: '360° Live Stadium', p_stage: 'Front Live Stage', p_vortex: '3D Vortex',
       p_center: 'Center Focus (Fixed)', p_bounce: 'Dynamic Bounce', p_bass: 'Bass Boosted',
       p_concert: 'Concert Hall', p_studio: 'Studio Monitor',
@@ -80,7 +81,8 @@ document.addEventListener('DOMContentLoaded', () => {
       e_NO_TAB: 'No active tab found.', e_RESTRICTED_PAGE: 'Chrome does not allow capturing audio from this page.',
       e_NO_STREAM_ID: 'Could not get the audio. Try reloading the page.', e_ENGINE_TIMEOUT: 'The audio engine did not respond. Please try again.',
       e_ENGINE_NOT_READY: 'The audio engine is not running.', e_ALREADY_RECORDING: 'A recording is already in progress.', e_NO_RECORDING: 'No recording available.',
-      e_NO_ENGINE: 'The audio engine did not respond. Turn it off and on again.'
+      e_NO_ENGINE: 'The audio engine did not respond. Turn it off and on again.',
+      updateAvail: '✨ New version ({v}) available! Click to download.'
     }
   };
 
@@ -455,5 +457,30 @@ document.addEventListener('DOMContentLoaded', () => {
     const savedPreset = stored.headspace_preset;
     if (savedPreset && Array.from(presetSelect.options).some((o) => o.value === savedPreset)) presetSelect.value = savedPreset;
     await syncStatus();
+
+    const localVer = chrome.runtime.getManifest().version;
+    const vDisp = $('versionDisplay');
+    if (vDisp) vDisp.textContent = 'v' + localVer;
+
+    fetch('https://raw.githubusercontent.com/JohnIohananDev/headspace-8d/main/manifest.json', { cache: 'no-store' })
+      .then((r) => r.json())
+      .then((rem) => {
+        const rv = rem.version.split('.').map(Number);
+        const lv = localVer.split('.').map(Number);
+        let newer = false;
+        for (let i = 0; i < Math.max(rv.length, lv.length); i++) {
+          const a = rv[i] || 0, b = lv[i] || 0;
+          if (a > b) { newer = true; break; }
+          if (a < b) break;
+        }
+        if (newer) {
+          const banner = $('updateBanner');
+          if (banner) {
+            banner.textContent = t('updateAvail').replace('{v}', rem.version);
+            banner.href = 'https://github.com/JohnIohananDev/headspace-8d';
+            banner.style.display = 'block';
+          }
+        }
+      }).catch(() => {});
   })();
 });
