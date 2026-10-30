@@ -1,7 +1,6 @@
 let audioCtx = null;
 let mediaStream = null;
 let sourceNode = null;
-
 let inputGain, subBass, bassShelf, clarity, air;
 let panner, standardGain;
 let surroundPanner, surroundLow, surroundLowGain, surroundGain;
@@ -26,12 +25,10 @@ let loadedReverbType = null;
 let irCache = {};
 let recordingDestination;
 let binauralMerger, binauralGain, binOscL, binOscR;
-
 let hrtfTimer = null;
 let lastFrameTime = 0;
 let visualizerPhase = 0;
 let lastPos = { x: 0, z: -1 };
-
 let isRecording = false;
 let isStopping = false;
 let mediaRecorder = null;
@@ -42,7 +39,6 @@ let lastFormat = null;
 let lastFileExt = 'webm';
 let lastCustomTitle = 'HeadSpace';
 let recordEpoch = 0;
-
 let wavProcessor = null;
 let wavSink = null;
 let wavChunks = [];
@@ -53,7 +49,8 @@ const DEFAULT_PARAMS = {
   bass: 40, clarity: 50, reverb: 25, warmth: 0, chorus: 0, echo: 0, waves: 0,
   character: 'off', characterAmount: 100, charTone: 60, charDrive: 25, charNoise: 35,
   reverbType: 'classic', ambience: 'off', ambienceVol: 35,
-  spatialMode: 'hrtf', hrtfPath: 'orbit', binaural: false, binauralPreset: 'focus'
+  spatialMode: 'hrtf', hrtfPath: 'orbit', binaural: false, binauralPreset: 'focus',
+  smartVolume: false
 };
 let currentParams = { ...DEFAULT_PARAMS };
 
@@ -79,7 +76,9 @@ const CHARACTERS = {
   'vhs': { hp: 80, lp: 5200, pf: 300, pg: 1.8, pq: 0.7, drive: 1.4, wob: 0.0022, wobHz: 0.45, hiss: 0.09, pops: 0.08 },
   'gramophone': { hp: 400, lp: 2500, pf: 900, pg: 2.6, pq: 0.9, drive: 1.6, wob: 0.0015, wobHz: 0.7, hiss: 0.12, pops: 0.45 },
   'underwater': { hp: 20, lp: 420, pf: 180, pg: 2.5, pq: 0.8, drive: 1.0, wob: 0.0008, wobHz: 0.25, hiss: 0, pops: 0 },
-  'muffled': { hp: 20, lp: 650, pf: 220, pg: 2.0, pq: 0.8, drive: 1.0, wob: 0, wobHz: 0.4, hiss: 0, pops: 0 }
+  'muffled': { hp: 40, lp: 350, pf: 100, pg: 0, pq: 1, drive: 0.01, wob: 0, wobHz: 0, hiss: 0, pops: 0 },
+  'bathroom': { hp: 100, lp: 250, pf: 100, pg: 0, pq: 1, drive: 0.01, wob: 0, wobHz: 0, hiss: 0, pops: 0 },
+  'hallway': { hp: 60, lp: 450, pf: 100, pg: 0, pq: 1, drive: 0.01, wob: 0, wobHz: 0, hiss: 0, pops: 0 }
 };
 const HRTF_TRIM = 1.35;
 const HRTF_SPREAD_RAD = 0.32;
@@ -165,9 +164,7 @@ function makePopBuffer(ctx, seconds = 6) {
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.target !== 'offscreen') return false;
   if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume().catch(() => {});
-
   const reply = (promise) => promise.then((r) => sendResponse(r === undefined ? { success: true } : r)).catch((err) => sendResponse({ error: err.message }));
-
   switch (message.action) {
     case 'PROCESS_STREAM': reply(startProcessing(message.streamId).then(() => ({ success: true }))); return true;
     case 'STOP_STREAM': reply(stopProcessing().then(() => ({ success: true, hasRecording: !!lastRecordedBlob }))); return true;
@@ -209,21 +206,17 @@ function buildGraph() {
   bassShelf = audioCtx.createBiquadFilter(); bassShelf.type = 'lowshelf'; bassShelf.frequency.value = hz(140);
   clarity = audioCtx.createBiquadFilter(); clarity.type = 'peaking'; clarity.frequency.value = hz(3500); clarity.Q.value = 1.1;
   air = audioCtx.createBiquadFilter(); air.type = 'highshelf'; air.frequency.value = hz(10000);
-
   panner = audioCtx.createStereoPanner(); standardGain = audioCtx.createGain();
   surroundPanner = audioCtx.createStereoPanner(); surroundLow = audioCtx.createBiquadFilter(); surroundLow.type = 'lowpass'; surroundLow.frequency.value = hz(240);
   surroundLowGain = audioCtx.createGain(); surroundLowGain.gain.value = 0.25; surroundGain = audioCtx.createGain();
-
   hrtfSplitter = audioCtx.createChannelSplitter(2);
   const mkHrtfPanner = () => new PannerNode(audioCtx, { panningModel: 'HRTF', distanceModel: 'linear', rolloffFactor: 0, positionX: 0, positionY: 0, positionZ: -1, channelCount: 1, channelCountMode: 'explicit' });
   hrtfPannerL = mkHrtfPanner(); hrtfPannerR = mkHrtfPanner();
   hrtfBassComp = audioCtx.createBiquadFilter(); hrtfBassComp.type = 'peaking'; hrtfBassComp.frequency.value = hz(180); hrtfBassComp.Q.value = 0.7; hrtfBassComp.gain.value = -8;
   hrtfGain = audioCtx.createGain(); modeSum = audioCtx.createGain();
-
   warmthLP = audioCtx.createBiquadFilter(); warmthLP.type = 'lowpass'; warmthLP.Q.value = 0.5; warmthLP.frequency.value = hz(20000);
   tideLP = audioCtx.createBiquadFilter(); tideLP.type = 'lowpass'; tideLP.Q.value = 0.6; tideLP.frequency.value = hz(20000);
   tideLfo = audioCtx.createOscillator(); tideLfo.frequency.value = 0.08; tideDepth = audioCtx.createGain(); tideDepth.gain.value = 0; tideLfo.connect(tideDepth); tideDepth.connect(tideLP.detune);
-
   charDryDelay = audioCtx.createDelay(0.05); charDryDelay.delayTime.value = 0.01; charDry = audioCtx.createGain(); charDry.gain.value = 1;
   charHP = audioCtx.createBiquadFilter(); charHP.type = 'highpass'; charHP.frequency.value = 20; charHP.Q.value = 0.65;
   charLP = audioCtx.createBiquadFilter(); charLP.type = 'lowpass'; charLP.frequency.value = hz(20000); charLP.Q.value = 0.65;
@@ -233,28 +226,24 @@ function buildGraph() {
   charVibDelay = audioCtx.createDelay(0.05); charVibDelay.delayTime.value = 0.01; charVibLfo = audioCtx.createOscillator(); charVibLfo.frequency.value = 0.5;
   charVibDepth = audioCtx.createGain(); charVibDepth.gain.value = 0; charVibLfo.connect(charVibDepth); charVibDepth.connect(charVibDelay.delayTime);
   charWet = audioCtx.createGain(); charWet.gain.value = 0; charOut = audioCtx.createGain();
-
   charHissSrc = audioCtx.createBufferSource(); charHissSrc.buffer = makeHissBuffer(audioCtx); charHissSrc.loop = true;
   charHissHP = audioCtx.createBiquadFilter(); charHissHP.type = 'highpass'; charHissHP.frequency.value = 700;
   charHissLP = audioCtx.createBiquadFilter(); charHissLP.type = 'lowpass'; charHissLP.frequency.value = hz(3400); charHissGain = audioCtx.createGain(); charHissGain.gain.value = 0;
   charPopSrc = audioCtx.createBufferSource(); charPopSrc.buffer = makePopBuffer(audioCtx); charPopSrc.loop = true;
   charPopHP = audioCtx.createBiquadFilter(); charPopHP.type = 'bandpass'; charPopHP.frequency.value = 1100; charPopHP.Q.value = 0.8;
   charPopGain = audioCtx.createGain(); charPopGain.gain.value = 0; charNoiseOut = audioCtx.createGain();
-
   chorusSplit = audioCtx.createChannelSplitter(2); chorusMerge = audioCtx.createChannelMerger(2);
   chorusDelayL = audioCtx.createDelay(0.1); chorusDelayL.delayTime.value = 0.020; chorusDelayR = audioCtx.createDelay(0.1); chorusDelayR.delayTime.value = 0.027;
   chorusLfoL = audioCtx.createOscillator(); chorusLfoL.frequency.value = 0.21; chorusLfoR = audioCtx.createOscillator(); chorusLfoR.frequency.value = 0.29;
   chorusDepthL = audioCtx.createGain(); chorusDepthL.gain.value = 0.0035; chorusDepthR = audioCtx.createGain(); chorusDepthR.gain.value = 0.0042;
   chorusLfoL.connect(chorusDepthL); chorusDepthL.connect(chorusDelayL.delayTime); chorusLfoR.connect(chorusDepthR); chorusDepthR.connect(chorusDelayR.delayTime);
   chorusWet = audioCtx.createGain(); chorusDry = audioCtx.createGain(); chorusSum = audioCtx.createGain();
-
   echoIn = audioCtx.createGain(); echoIn.channelCount = 1; echoIn.channelCountMode = 'explicit';
   echoDelayL = audioCtx.createDelay(2); echoDelayL.delayTime.value = 0.375; echoDelayR = audioCtx.createDelay(2); echoDelayR.delayTime.value = 0.375;
   echoFbL = audioCtx.createGain(); echoFbL.gain.value = 0.66; echoFbR = audioCtx.createGain(); echoFbR.gain.value = 0.66;
   echoLP = audioCtx.createBiquadFilter(); echoLP.type = 'lowpass'; echoLP.frequency.value = hz(2800); echoLP.Q.value = 0.5;
   echoPanL = audioCtx.createStereoPanner(); echoPanL.pan.value = -0.8; echoPanR = audioCtx.createStereoPanner(); echoPanR.pan.value = 0.8;
   echoOut = audioCtx.createGain(); fxSum = audioCtx.createGain();
-
   ambSource = audioCtx.createBufferSource(); ambSource.buffer = makeNoiseBuffer(audioCtx); ambSource.loop = true;
   ambFilterA = audioCtx.createBiquadFilter(); ambFilterB = audioCtx.createBiquadFilter();
   ambMod = audioCtx.createGain(); ambMod.gain.value = 0; ambLfo = audioCtx.createOscillator(); ambLfo.frequency.value = 0.1;
@@ -262,7 +251,6 @@ function buildGraph() {
   droneEnable = audioCtx.createGain(); droneEnable.gain.value = 0; droneLP = audioCtx.createBiquadFilter(); droneLP.type = 'lowpass'; droneLP.frequency.value = hz(900); droneLP.Q.value = 0.5;
   droneLfo = audioCtx.createOscillator(); droneLfo.frequency.value = 0.05; droneLfoDepth = audioCtx.createGain(); droneLfoDepth.gain.value = 0;
   droneLfo.connect(droneLfoDepth); droneLfoDepth.connect(droneEnable.gain);
-
   droneOscs = [];
   for (const [freq, amp] of DRONE_VOICES) {
     for (const cents of [-5, 5]) {
@@ -270,17 +258,13 @@ function buildGraph() {
       const g = audioCtx.createGain(); g.gain.value = amp * 0.5; osc.connect(g); g.connect(droneLP); droneOscs.push(osc);
     }
   }
-
   convolver = null; dryGain = audioCtx.createGain(); wetGain = audioCtx.createGain();
   compressor = audioCtx.createDynamicsCompressor(); outputGain = audioCtx.createGain();
-  compressor.threshold.value = -1; compressor.knee.value = 0; compressor.ratio.value = 20; compressor.attack.value = 0.001; compressor.release.value = 0.25;
   softClip = audioCtx.createWaveShaper(); softClip.curve = createSoftClipCurve(); softClip.oversample = '4x';
   outputClamp = audioCtx.createWaveShaper(); outputClamp.curve = createHardClipCurve(); outputClamp.oversample = 'none';
-
   recordingDestination = audioCtx.createMediaStreamDestination();
   binauralMerger = audioCtx.createChannelMerger(2); binauralGain = audioCtx.createGain(); binauralGain.gain.value = 0;
   binOscL = audioCtx.createOscillator(); binOscR = audioCtx.createOscillator();
-
   sourceNode.connect(inputGain); inputGain.connect(subBass); subBass.connect(bassShelf); bassShelf.connect(clarity); clarity.connect(air);
   air.connect(panner); panner.connect(standardGain); air.connect(surroundPanner); surroundPanner.connect(surroundGain);
   air.connect(surroundLow); surroundLow.connect(surroundLowGain); surroundLowGain.connect(surroundGain);
@@ -301,10 +285,8 @@ function buildGraph() {
   compressor.connect(softClip); softClip.connect(outputClamp); outputClamp.connect(outputGain);
   outputGain.connect(audioCtx.destination); outputGain.connect(recordingDestination);
   binOscL.connect(binauralMerger, 0, 0); binOscR.connect(binauralMerger, 0, 1); binauralMerger.connect(binauralGain); binauralGain.connect(outputGain);
-
   binOscL.start(); binOscR.start(); tideLfo.start(); chorusLfoL.start(); chorusLfoR.start();
   ambSource.start(); ambLfo.start(); droneLfo.start(); charHissSrc.start(); charPopSrc.start(); charVibLfo.start(); droneOscs.forEach((o) => o.start());
-
   loadedReverbType = null; applyParams(currentParams, true); hrtfTimer = setInterval(updateHrtfPosition, 33);
 }
 
@@ -327,7 +309,9 @@ function normalizeParams(p) {
   if (out.ambience !== 'off' && !AMBIENCE[out.ambience]) out.ambience = 'off';
   if (out.character !== 'off' && !CHARACTERS[out.character]) out.character = 'off';
   if (!BINAURAL_FREQS[out.binauralPreset]) out.binauralPreset = 'focus';
-  out.binaural = !!out.binaural; return out;
+  out.binaural = !!out.binaural; 
+  out.smartVolume = !!out.smartVolume;
+  return out;
 }
 
 function applyParams(newParams, immediate = false) {
@@ -336,29 +320,24 @@ function applyParams(newParams, immediate = false) {
   if (audioCtx.state === 'suspended') audioCtx.resume().catch(() => {});
   const p = currentParams, now = audioCtx.currentTime, hz = (target) => Math.min(target, audioCtx.sampleRate * 0.49);
   const setParam = (nodeParam, val) => { nodeParam.cancelScheduledValues(now); if (immediate) nodeParam.value = val; else nodeParam.setTargetAtTime(val, now, 0.05); };
-
   const bassNorm = p.bass / 100; setParam(inputGain.gain, Math.pow(10, -(bassNorm * 3) / 20)); setParam(subBass.gain, bassNorm * 3); setParam(bassShelf.gain, bassNorm * 9);
   const clarNorm = p.clarity / 100; setParam(clarity.gain, clarNorm * 5); setParam(air.gain, clarNorm * 3);
   const revNorm = p.reverb / 100; setParam(dryGain.gain, 1 - revNorm * 0.4); setParam(wetGain.gain, revNorm * 0.6);
   if (p.reverbType !== loadedReverbType) setReverbType(p.reverbType);
-
   setParam(standardGain.gain, p.spatialMode === 'standard' ? 1 : 0); setParam(surroundGain.gain, p.spatialMode === 'surround' ? 1 : 0); setParam(hrtfGain.gain, p.spatialMode === 'hrtf' ? HRTF_TRIM : 0);
   setParam(warmthLP.frequency, hz(20000 * Math.pow(0.2, p.warmth / 100)));
   const tide = p.waves / 100; setParam(tideLP.frequency, hz(20000 * Math.pow(0.15, tide))); setParam(tideDepth.gain, tide * 1500);
-
   const ch = CHARACTERS[p.character], amt = ch ? p.characterAmount / 100 : 0;
   if (ch) {
     const toneScale = 0.35 + (p.charTone / 100) * 1.35, effectiveLP = Math.max(320, Math.min(14000, ch.lp * toneScale)), userDrive = 1 + (p.charDrive / 100) * 1.7, noiseFactor = (p.charNoise / 100) * 1.5;
     setParam(charHP.frequency, hz(ch.hp)); setParam(charLP.frequency, hz(effectiveLP)); setParam(charSmoothLP.frequency, hz(Math.min(effectiveLP * 1.25, 9500)));
     setParam(charPeak.frequency, hz(ch.pf)); setParam(charPeak.gain, Math.min(3.0, ch.pg)); setParam(charPeak.Q, ch.pq); setParam(charVibLfo.frequency, ch.wobHz);
-    charShaper.curve = createDriveCurve(userDrive); setParam(charCompGain.gain, 0.90 - (p.charDrive / 100) * 0.16);
+    charShaper.curve = createDriveCurve(ch.drive > 0.1 ? userDrive : ch.drive); setParam(charCompGain.gain, 0.90 - (p.charDrive / 100) * 0.16);
     setParam(charHissGain.gain, ch.hiss * noiseFactor * amt * 0.55); setParam(charPopGain.gain, ch.pops * noiseFactor * amt * 0.65);
   } else { setParam(charHissGain.gain, 0); setParam(charPopGain.gain, 0); }
   setParam(charWet.gain, amt); setParam(charDry.gain, 1 - amt); setParam(charVibDepth.gain, ch ? ch.wob * amt : 0);
-
   const cho = p.chorus / 100; setParam(chorusWet.gain, cho * 0.65); setParam(chorusDry.gain, 1 - cho * 0.25);
   setParam(echoIn.gain, (p.echo / 100) * 0.55);
-
   const amb = AMBIENCE[p.ambience];
   if (amb && amb.kind === 'noise') {
     ambFilterA.type = amb.a.type; setParam(ambFilterA.frequency, amb.a.f); setParam(ambFilterA.Q, amb.a.q);
@@ -369,8 +348,9 @@ function applyParams(newParams, immediate = false) {
     setParam(ambMod.gain, 0); setParam(ambLfoDepth.gain, 0); setParam(droneEnable.gain, 0.4); setParam(droneLfoDepth.gain, 0.12);
   } else { setParam(ambMod.gain, 0); setParam(ambLfoDepth.gain, 0); setParam(droneEnable.gain, 0); setParam(droneLfoDepth.gain, 0); }
   setParam(ambLevel.gain, (p.ambienceVol / 100) * AMBIENCE_LEVEL);
-
   const bp = BINAURAL_FREQS[p.binauralPreset]; setParam(binOscL.frequency, bp.c); setParam(binOscR.frequency, bp.c + bp.b); setParam(binauralGain.gain, p.binaural ? 0.07 : 0);
+  const compSettings = p.smartVolume ? { t: -22, r: 5, k: 15, a: 0.003, m: 1.4 } : { t: -1, r: 20, k: 0, a: 0.001, m: 1.0 };
+  setParam(compressor.threshold, compSettings.t); setParam(compressor.ratio, compSettings.r); setParam(compressor.knee, compSettings.k); setParam(compressor.attack, compSettings.a); setParam(outputGain.gain, compSettings.m);
 }
 
 function getCoords(phase, path, rad) {
@@ -396,11 +376,9 @@ function updateHrtfPosition() {
   if (!audioCtx) return;
   if (audioCtx.state === 'suspended') audioCtx.resume().catch(() => {});
   if (mediaStream) { const tracks = mediaStream.getAudioTracks(); if (tracks.length === 0 || tracks.every((tr) => tr.readyState === 'ended')) { stopProcessing(); return; } }
-
   const nowPerf = performance.now(), dt = Math.min(0.15, Math.max(0, (nowPerf - lastFrameTime) / 1000));
   lastFrameTime = nowPerf;
   const p = currentParams, radius = 1 + (p.intensity / 100) * 2.5, now = audioCtx.currentTime;
-
   if (p.manualMode) {
     lastPos = { x: p.manualX, z: p.manualZ };
     const panVal = Math.max(-1, Math.min(1, p.manualX));
@@ -412,16 +390,13 @@ function updateHrtfPosition() {
     }
     return;
   }
-
   const speedHz = Math.max(p.speed / 100, 0.001), dirSign = p.direction === 'ccw' ? -1 : 1;
   visualizerPhase += dt * speedHz * Math.PI * 2 * dirSign;
   const effectivePhase = p.direction === 'pingpong' ? Math.sin(visualizerPhase * 0.5) * Math.PI : visualizerPhase;
   const coords = p.intensity > 0 ? getCoords(effectivePhase, p.hrtfPath, radius) : { x: 0, y: 0, z: -radius };
-
   lastPos = { x: Math.max(-1, Math.min(1, coords.x / radius)), z: Math.max(-1, Math.min(1, coords.z / radius)) };
   const panVal = Math.max(-1, Math.min(1, lastPos.x * (p.intensity / 100)));
   if (panner && surroundPanner) { panner.pan.setTargetAtTime(panVal, now, 0.04); surroundPanner.pan.setTargetAtTime(panVal, now, 0.04); }
-
   for (const [ang, pannerNode] of [[-HRTF_SPREAD_RAD, hrtfPannerL], [HRTF_SPREAD_RAD, hrtfPannerR]]) {
     const c = Math.cos(ang), sn = Math.sin(ang);
     pannerNode.positionX.setTargetAtTime(coords.x * c - coords.z * sn, now, 0.05); pannerNode.positionY.setTargetAtTime(coords.y, now, 0.05); pannerNode.positionZ.setTargetAtTime(coords.x * sn + coords.z * c, now, 0.05);
@@ -465,13 +440,10 @@ async function startRecording(format = 'compressed', customTitle = '') {
   if (isRecording) throw new Error('ALREADY_RECORDING');
   clearLastRecording(); recordedChunks = []; lastFormat = format;
   lastCustomTitle = customTitle || 'HeadSpace'; recordEpoch = Date.now(); isRecording = true;
-
   try {
     if (format === 'wav') { lastFileExt = 'wav'; startWavCapture(); return; }
-
     const stream = recordingDestination.stream; 
     const mimeType = 'audio/webm'; lastFileExt = 'webm';
-    
     mediaRecorder = new MediaRecorder(stream, { mimeType, audioBitsPerSecond: 256000 });
     mediaRecorder.ondataavailable = (e) => { if (e.data && e.data.size > 0) recordedChunks.push(e.data); };
     mediaRecorder.onerror = (e) => console.error(e.error || e);
@@ -484,7 +456,6 @@ async function startRecording(format = 'compressed', customTitle = '') {
 async function stopRecording() {
   if (!isRecording || isStopping) return;
   isStopping = true;
-
   try {
     if (lastFormat === 'wav') {
       isRecording = false; lastRecordedBlob = finishWavCapture();
