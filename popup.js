@@ -1,12 +1,16 @@
 document.addEventListener('DOMContentLoaded', () => {
   const $ = (id) => document.getElementById(id);
-
   const I18N = {
     pt: {
       powerTitle: 'Ligar / desligar o motor', unlockOrbit: '↻ Voltar a girar',
       moveText: 'O efeito está em outra aba.', moveBtn: 'Usar nesta aba',
       preset: 'Preset', grpClassic: 'Clássicos', grpRelax: 'Relaxantes', grpRetro: 'Retrô & Rádio',
-      p_8d: '8D Clássico', p_slowedReverb: 'Slowed + Reverb', p_nightcore: 'Speed Up / Nightcore', p_slow: 'Ambiente Lento', p_fast: 'Rotação Rápida',
+      grpCustom: 'Meus Efeitos (Salvos)', btnSavePre: '💾 Salvar', btnExportPre: '📤 Exportar', btnImportPre: '📥 Importar',
+      mdlSaveTitle: 'Nome do seu Efeito', mdlCancel: 'Cancelar', mdlSave: 'Salvar', mdlClose: 'Fechar', mdlCopy: 'Copiar',
+      mdlImportTitle: 'Importar Código', mdlImportBtn: 'Carregar', mdlExportTitle: 'Seu Código Mágico',
+      grpParty: 'Festa / Outro Cômodo', p_bathroom: 'Banheiro da Festa', p_hallway: 'Corredor do Evento',
+      smartVol: 'Volume Inteligente', smartVolSub: 'Protege contra distorção em batidas fortes',
+      p_8d: '8D Clássico', p_slowedReverb: 'Slowed + Reverb 🐌', p_nightcore: 'Speed Up / Nightcore ⚡', p_slow: 'Ambiente Lento', p_fast: 'Rotação Rápida',
       p_stadium: 'Show em Estádio 360°', p_stage: 'Palco Ao Vivo', p_vortex: 'Vórtice 3D',
       p_center: 'Foco Central (Fixo)', p_bounce: 'Bounce Dinâmico', p_bass: 'Bass Boosted',
       p_concert: 'Sala de Concerto', p_studio: 'Monitor de Estúdio',
@@ -23,10 +27,10 @@ document.addEventListener('DOMContentLoaded', () => {
       spinDir: 'Lado / Direção do Giro 8D', dirCw: '↻ Direita (Horário)', dirCcw: '↺ Esquerda (Anti-hor.)', dirPing: '⇄ Vai e Volta',
       depth: 'Profundidade', speed: 'Velocidade (Giro)', playbackSpeed: 'Música: Slowed / Speed Up', bass: 'Graves', treble: 'Agudos', warmth: 'Calor (som aveludado)', room: 'Reverb (Tamanho da sala)', reverbType: 'Tipo de reverb',
       rvClassic: 'Sala (clássico)', rvHall: 'Salão', rvCathedral: 'Catedral', rvSpace: 'Espaço profundo',
-      character: 'Efeito de Rádio / Época (junto com 8D)', chOff: 'Desligado', chWalkman: 'Walkman Anos 90', chRadio: 'Rádio velho (limpo)', chRadioNoise: 'Rádio velho (com chiado)',
+      character: 'Efeito de Rádio / Época', chOff: 'Desligado', chWalkman: 'Walkman Anos 90', chRadio: 'Rádio velho (limpo)', chRadioNoise: 'Rádio velho (com chiado)',
       chRadioAm: 'Rádio AM Anos 50', chVinyl: 'Vinil antigo (chiado e estalos)', chTape: 'Fita cassete Lo-Fi', chVhs: 'Fita VHS antiga', chGramophone: 'Gramofone clássico', chPhone: 'Telefone suave',
-      chUnderwater: 'Submerso (debaixo d\'água)', chMuffled: 'Abafado (festa ao lado)',
-      charAmount: 'Intensidade do efeito', charTone: 'Filtro do Rádio (Abafado ↔ Aberto)', charDrive: 'Saturação / Válvula', charNoise: 'Chiado e Estalos',
+      chUnderwater: 'Submerso (debaixo d\'água)', chMuffled: 'Abafado (festa ao lado)', chBathroom: 'Acústica de Banheiro', chHallway: 'Acústica de Corredor',
+      charAmount: 'Intensidade do efeito', charTone: 'Filtro do Rádio', charDrive: 'Saturação / Válvula', charNoise: 'Chiado e Estalos',
       ethereal: 'Etéreo (chorus)', echo: 'Eco ping-pong', tide: 'Maré (filtro respirando)',
       ambience: 'Som ambiente', ambRain: 'Chuva', ambOcean: 'Ondas do mar', ambWind: 'Vento', ambBrown: 'Ruído marrom (calmante)', ambDrone: 'Drone cósmico', ambVol: 'Volume do ambiente',
       binaural: 'Ondas binaurais', mentalState: 'Estado mental', bFocus: 'Foco Extremo (Beta)', bRelax: 'Relaxamento (Alfa)', bMeditate: 'Meditação (Teta)', bSleep: 'Sono Profundo (Delta)',
@@ -38,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
       needEngine: 'Ligue o motor primeiro', recDone: 'Gravação concluída! Clique em Salvar', recFail: 'Erro ao finalizar a gravação',
       saving: 'Salvando...', binOn: 'Ondas ativas — use fones de ouvido', binOff: 'Frequências cerebrais de fundo', moved: 'Efeito movido para esta aba', errPrefix: 'Erro: ',
       e_NO_TAB: 'Nenhuma aba ativa encontrada.', e_RESTRICTED_PAGE: 'O Chrome não permite capturar o áudio desta página.',
-      e_NO_STREAM_ID: 'Não foi possível obter o áudio. Tente recarregar a página.', e_ENGINE_TIMEOUT: 'O motor de áudio não respondeu. Tente novamente.',
+      e_NO_STREAM_ID: 'Não foi possível obter o áudio. Tente recarregar a página.', e_ENGINE_TIMEOUT: 'O motor não respondeu. Tente novamente.',
       e_ENGINE_NOT_READY: 'O motor de áudio não está ligado.', e_ALREADY_RECORDING: 'Já existe uma gravação em andamento.', e_NO_RECORDING: 'Nenhuma gravação disponível.',
       e_NO_ENGINE: 'O motor de áudio não respondeu. Desligue e ligue de novo.',
       updateAvail: '✨ Nova versão ({v}) disponível! Clique para baixar.'
@@ -47,7 +51,12 @@ document.addEventListener('DOMContentLoaded', () => {
       powerTitle: 'Turn the engine on / off', unlockOrbit: '↻ Resume spin',
       moveText: 'The effect is running on another tab.', moveBtn: 'Use this tab',
       preset: 'Preset', grpClassic: 'Classics', grpRelax: 'Relaxing', grpRetro: 'Retro & Radio',
-      p_8d: 'Classic 8D', p_slowedReverb: 'Slowed + Reverb', p_nightcore: 'Speed Up / Nightcore', p_slow: 'Slow Ambient', p_fast: 'Fast Spin',
+      grpCustom: 'My Saved Presets', btnSavePre: '💾 Save', btnExportPre: '📤 Export', btnImportPre: '📥 Import',
+      mdlSaveTitle: 'Name your Preset', mdlCancel: 'Cancel', mdlSave: 'Save', mdlClose: 'Close', mdlCopy: 'Copy',
+      mdlImportTitle: 'Import Code', mdlImportBtn: 'Load', mdlExportTitle: 'Your Magic Code',
+      grpParty: 'Party / Next Room', p_bathroom: 'Party Bathroom', p_hallway: 'Event Hallway',
+      smartVol: 'Smart Volume', smartVolSub: 'Protects against distortion on loud beats',
+      p_8d: 'Classic 8D', p_slowedReverb: 'Slowed + Reverb 🐌', p_nightcore: 'Speed Up / Nightcore ⚡', p_slow: 'Slow Ambient', p_fast: 'Fast Spin',
       p_stadium: '360° Live Stadium', p_stage: 'Front Live Stage', p_vortex: '3D Vortex',
       p_center: 'Center Focus (Fixed)', p_bounce: 'Dynamic Bounce', p_bass: 'Bass Boosted',
       p_concert: 'Concert Hall', p_studio: 'Studio Monitor',
@@ -64,10 +73,10 @@ document.addEventListener('DOMContentLoaded', () => {
       spinDir: '8D Rotation Direction', dirCw: '↻ Right (Clockwise)', dirCcw: '↺ Left (Counter-CW)', dirPing: '⇄ Ping-Pong',
       depth: 'Depth', speed: 'Speed (Spin)', playbackSpeed: 'Music: Slowed / Speed Up', bass: 'Bass', treble: 'Treble', warmth: 'Warmth (velvety sound)', room: 'Reverb (Room size)', reverbType: 'Reverb type',
       rvClassic: 'Room (classic)', rvHall: 'Hall', rvCathedral: 'Cathedral', rvSpace: 'Deep space',
-      character: 'Vintage / Radio effect (works with 8D)', chOff: 'Off', chWalkman: '90s Walkman', chRadio: 'Old radio (clean)', chRadioNoise: 'Old radio (with static)',
+      character: 'Vintage / Radio effect', chOff: 'Off', chWalkman: '90s Walkman', chRadio: 'Old radio (clean)', chRadioNoise: 'Old radio (with static)',
       chRadioAm: '50s AM Radio', chVinyl: 'Old vinyl (hiss and crackle)', chTape: 'Lo-Fi Cassette tape', chVhs: 'Old VHS tape', chGramophone: 'Classic Gramophone', chPhone: 'Smooth Telephone',
-      chUnderwater: 'Underwater (submerged)', chMuffled: 'Muffled (party next door)',
-      charAmount: 'Effect amount', charTone: 'Radio Filter (Dark ↔ Bright)', charDrive: 'Tube Warmth / Drive', charNoise: 'Static & Crackle',
+      chUnderwater: 'Underwater (submerged)', chMuffled: 'Muffled (party next door)', chBathroom: 'Bathroom Acoustics', chHallway: 'Hallway Acoustics',
+      charAmount: 'Effect amount', charTone: 'Radio Filter', charDrive: 'Tube Warmth / Drive', charNoise: 'Static & Crackle',
       ethereal: 'Ethereal (chorus)', echo: 'Ping-pong echo', tide: 'Tide (breathing filter)',
       ambience: 'Ambient sound', ambRain: 'Rain', ambOcean: 'Ocean waves', ambWind: 'Wind', ambBrown: 'Brown noise (calming)', ambDrone: 'Cosmic drone', ambVol: 'Ambient volume',
       binaural: 'Binaural beats', mentalState: 'Mental state', bFocus: 'Extreme Focus (Beta)', bRelax: 'Relaxation (Alpha)', bMeditate: 'Meditation (Theta)', bSleep: 'Deep Sleep (Delta)',
@@ -85,48 +94,43 @@ document.addEventListener('DOMContentLoaded', () => {
       updateAvail: '✨ New version ({v}) available! Click to download.'
     }
   };
-
   let lang = 'pt';
   const t = (key) => (I18N[lang] && I18N[lang][key]) || I18N.pt[key] || key;
   const errText = (code) => { if (!code) return t('e_NO_ENGINE'); const key = 'e_' + code; return (I18N[lang] && I18N[lang][key]) || code; };
-
   function detectLanguage() {
     let ui = 'pt';
     try { ui = chrome.i18n.getUILanguage() || navigator.language || 'pt'; } catch (e) { ui = navigator.language || 'pt'; }
     return String(ui).toLowerCase().startsWith('pt') ? 'pt' : 'en';
   }
-
   const toggleBtn = $('toggleBtn'), statusText = $('statusText'), statusIndicator = $('statusIndicator');
   const hero = $('hero'), orbit = $('orbit'), sat = $('sat'), unlockOrbitBtn = $('unlockOrbitBtn');
   const moveBar = $('moveBar'), moveBtn = $('moveBtn'), presetSelect = $('presetSelect'), resetBtn = $('resetBtn');
   const spatialModeSelect = $('spatialMode'), hrtfPathContainer = $('hrtfPathContainer');
   const radioCustomBox = $('radioCustomBox'), dirPills = document.querySelectorAll('.dir-pill');
-
   const SLIDER_KEYS = ['intensity', 'speed', 'playbackSpeed', 'bass', 'clarity', 'reverb', 'warmth', 'chorus', 'echo', 'waves', 'characterAmount', 'charTone', 'charDrive', 'charNoise', 'ambienceVol'];
   const SELECT_KEYS = ['spatialMode', 'hrtfPath', 'direction', 'reverbType', 'character', 'ambience', 'binauralPreset'];
   const sliders = {}; SLIDER_KEYS.forEach((k) => { sliders[k] = $(k); });
   const selects = {}; SELECT_KEYS.forEach((k) => { selects[k] = $(k); });
-
   const binauralToggle = $('binauralToggle'), binauralStatus = $('binauralStatus');
+  const smartVolumeToggle = $('smartVolumeToggle');
   const recordFormat = $('recordFormat');
   const recordBtn = $('recordBtn'), recordBtnText = $('recordBtnText'), recordTimer = $('recordTimer'), downloadBtn = $('downloadBtn');
-
+  let customPresets = {};
   const DEFAULTS = {
     intensity: 100, speed: 15, playbackSpeed: 100, direction: 'cw', manualMode: false, manualX: 0, manualZ: -1,
     bass: 40, clarity: 50, reverb: 25, warmth: 0, chorus: 0, echo: 0, waves: 0,
     character: 'off', characterAmount: 100, charTone: 60, charDrive: 25, charNoise: 35,
-    reverbType: 'classic', ambience: 'off', ambienceVol: 35, spatialMode: 'hrtf', hrtfPath: 'orbit'
+    reverbType: 'classic', ambience: 'off', ambienceVol: 35, spatialMode: 'hrtf', hrtfPath: 'orbit', smartVolume: false
   };
-
   const CHAR_PRESET_TUNING = {
     'walkman': { charTone: 75, charDrive: 20, charNoise: 25 }, 'radio': { charTone: 65, charDrive: 22, charNoise: 10 },
     'radio-noise': { charTone: 60, charDrive: 25, charNoise: 45 }, 'radio-am': { charTone: 45, charDrive: 30, charNoise: 40 },
     'vinyl': { charTone: 80, charDrive: 18, charNoise: 50 }, 'tape': { charTone: 70, charDrive: 25, charNoise: 25 },
     'vhs': { charTone: 55, charDrive: 30, charNoise: 35 }, 'gramophone': { charTone: 40, charDrive: 35, charNoise: 50 },
     'phone': { charTone: 55, charDrive: 25, charNoise: 10 }, 'underwater': { charTone: 20, charDrive: 10, charNoise: 0 },
-    'muffled': { charTone: 30, charDrive: 12, charNoise: 0 }
+    'muffled': { charTone: 30, charDrive: 5, charNoise: 0 }, 'bathroom': { charTone: 15, charDrive: 5, charNoise: 0 },
+    'hallway': { charTone: 25, charDrive: 5, charNoise: 0 }
   };
-
   const PRESETS = {
     '8d-rotation': { ...DEFAULTS },
     'slowed-reverb': { ...DEFAULTS, playbackSpeed: 82, intensity: 40, speed: 5, bass: 55, clarity: 30, reverb: 65, reverbType: 'hall', warmth: 15 },
@@ -138,7 +142,7 @@ document.addEventListener('DOMContentLoaded', () => {
     'vortex-3d': { ...DEFAULTS, intensity: 100, speed: 22, bass: 50, clarity: 55, reverb: 45, hrtfPath: 'vortex', reverbType: 'space', chorus: 25 },
     'center-focus': { ...DEFAULTS, intensity: 0, speed: 0, bass: 0, clarity: 0, reverb: 0, spatialMode: 'standard' },
     'bounce': { ...DEFAULTS, intensity: 80, speed: 30, bass: 40, clarity: 40, reverb: 20, hrtfPath: 'figure8', direction: 'pingpong' },
-    'bass-boost': { ...DEFAULTS, intensity: 70, speed: 10, bass: 85, clarity: 30, reverb: 15, spatialMode: 'surround' },
+    'bass-boost': { ...DEFAULTS, intensity: 70, speed: 10, bass: 85, clarity: 30, reverb: 15, spatialMode: 'surround', smartVolume: true },
     'concert-hall': { ...DEFAULTS, intensity: 50, speed: 8, bass: 30, clarity: 60, reverb: 70, reverbType: 'hall' },
     'studio': { ...DEFAULTS, intensity: 0, speed: 0, bass: 20, clarity: 70, reverb: 10, spatialMode: 'standard' },
     'cosmic-drift': { ...DEFAULTS, intensity: 85, speed: 6, bass: 35, clarity: 45, reverb: 55, hrtfPath: 'spiral', reverbType: 'space', chorus: 35, echo: 25, warmth: 30, waves: 20, ambience: 'drone', ambienceVol: 25 },
@@ -154,20 +158,19 @@ document.addEventListener('DOMContentLoaded', () => {
     'vhs-tape': { ...DEFAULTS, intensity: 70, speed: 8, bass: 45, clarity: 30, reverb: 30, chorus: 25, character: 'vhs', characterAmount: 90, charTone: 55, charDrive: 30, charNoise: 35 },
     'lofi-tape': { ...DEFAULTS, intensity: 55, speed: 5, bass: 50, clarity: 30, reverb: 30, hrtfPath: 'pendulum', reverbType: 'hall', warmth: 25, character: 'tape', characterAmount: 90, charTone: 70, charDrive: 25, charNoise: 25, ambience: 'rain', ambienceVol: 25 },
     'underwater-8d': { ...DEFAULTS, intensity: 75, speed: 6, bass: 60, clarity: 15, reverb: 55, hrtfPath: 'spiral', reverbType: 'space', waves: 45, character: 'underwater', characterAmount: 95, charTone: 20, charDrive: 10, charNoise: 0 },
-    'party-next-door': { ...DEFAULTS, intensity: 65, speed: 5, bass: 75, clarity: 15, reverb: 45, reverbType: 'hall', character: 'muffled', characterAmount: 95, charTone: 30, charDrive: 12, charNoise: 0 },
-    'phone-8d': { ...DEFAULTS, intensity: 100, speed: 20, bass: 20, clarity: 50, reverb: 10, hrtfPath: 'figure8', character: 'phone', characterAmount: 90, charTone: 55, charDrive: 25, charNoise: 10 }
+    'phone-8d': { ...DEFAULTS, intensity: 100, speed: 20, bass: 20, clarity: 50, reverb: 10, hrtfPath: 'figure8', character: 'phone', characterAmount: 90, charTone: 55, charDrive: 25, charNoise: 10 },
+    'party-next-door': { ...DEFAULTS, intensity: 50, speed: 4, bass: 65, clarity: 10, reverb: 35, reverbType: 'hall', character: 'muffled', characterAmount: 100, charTone: 20, charDrive: 5, charNoise: 0, smartVolume: true },
+    'party-bathroom': { ...DEFAULTS, intensity: 40, speed: 3, bass: 55, clarity: 15, reverb: 85, reverbType: 'classic', character: 'bathroom', characterAmount: 100, charTone: 15, charDrive: 5, charNoise: 0, smartVolume: true },
+    'party-hallway': { ...DEFAULTS, intensity: 60, speed: 5, bass: 60, clarity: 20, reverb: 50, reverbType: 'hall', character: 'hallway', characterAmount: 100, charTone: 25, charDrive: 5, charNoise: 0, smartVolume: true }
   };
-
   let isCapturing = false, isRecording = false, hasRecording = false, busy = false;
   let timerInterval = null, messageTimeout = null, port = null, engineTabId = null;
   let manualMode = false, manualX = 0, manualZ = -1, isDraggingOrbit = false;
-
   function send(message, timeoutMs = 4000) {
     const call = chrome.runtime.sendMessage(message).catch((err) => ({ error: err.message }));
     const timeout = new Promise((resolve) => setTimeout(() => resolve({ error: 'ENGINE_TIMEOUT' }), timeoutMs));
     return Promise.race([call, timeout]);
   }
-
   function createStars() {
     const box = $('stars'); if (!box) return;
     for (let i = 0; i < 46; i++) {
@@ -178,7 +181,6 @@ document.addEventListener('DOMContentLoaded', () => {
       box.appendChild(s);
     }
   }
-
   function applyLanguage(newLang) {
     lang = newLang === 'pt' ? 'pt' : 'en';
     document.documentElement.lang = lang === 'pt' ? 'pt-BR' : 'en';
@@ -188,30 +190,25 @@ document.addEventListener('DOMContentLoaded', () => {
     $('langPt').classList.toggle('active', lang === 'pt'); $('langEn').classList.toggle('active', lang === 'en');
     updateBinauralUI(); updateRecordUI(); refreshStatusText();
   }
-
   function readParams() {
     const params = {};
     SLIDER_KEYS.forEach((k) => { params[k] = parseFloat(sliders[k].value); });
     SELECT_KEYS.forEach((k) => { params[k] = selects[k].value; });
-    params.binaural = binauralToggle.checked; params.manualMode = manualMode; params.manualX = manualX; params.manualZ = manualZ;
+    params.binaural = binauralToggle.checked; params.smartVolume = smartVolumeToggle.checked; params.manualMode = manualMode; params.manualX = manualX; params.manualZ = manualZ;
     return params;
   }
-
   function setSliderFill(input) {
     if (!input) return;
     const min = parseFloat(input.min) || 0, max = parseFloat(input.max) || 100, pct = ((parseFloat(input.value) - min) / (max - min)) * 100;
     input.style.setProperty('--fill', pct + '%');
   }
-
   function syncDirPills(dirVal) { dirPills.forEach((btn) => { btn.classList.toggle('active', btn.dataset.dir === dirVal); }); }
   function updateRadioBoxVisibility() { if (radioCustomBox) radioCustomBox.style.display = selects.character.value === 'off' ? 'none' : 'block'; }
-
   function updateManualOrbitUI() {
     unlockOrbitBtn.style.display = manualMode ? 'inline-block' : 'none';
     sat.classList.toggle('is-manual', manualMode);
     if (manualMode) moveSat(manualX, manualZ);
   }
-
   function writeParamsToUI(params) {
     SLIDER_KEYS.forEach((k) => {
       if (params[k] === undefined || !sliders[k]) return;
@@ -233,17 +230,15 @@ document.addEventListener('DOMContentLoaded', () => {
     if (params.manualMode !== undefined) manualMode = !!params.manualMode;
     if (params.manualX !== undefined) manualX = params.manualX; if (params.manualZ !== undefined) manualZ = params.manualZ;
     if (params.binaural !== undefined) binauralToggle.checked = !!params.binaural;
+    if (params.smartVolume !== undefined) smartVolumeToggle.checked = !!params.smartVolume;
     updateHrtfVisibility(); updateRadioBoxVisibility(); updateManualOrbitUI(); updateBinauralUI(); updateRecordUI();
-    
     if (params.playbackSpeed !== undefined) {
        chrome.runtime.sendMessage({ action: 'SET_PLAYBACK_SPEED', speed: params.playbackSpeed / 100 }).catch(()=>{});
     }
   }
-
   function updateHrtfVisibility() { hrtfPathContainer.style.display = spatialModeSelect.value === 'hrtf' ? 'block' : 'none'; }
   function updateBinauralUI() { selects.binauralPreset.disabled = !binauralToggle.checked; binauralStatus.textContent = binauralToggle.checked ? t('binOn') : t('binOff'); }
   function setStatus(text, cls) { statusText.textContent = text; statusText.className = cls; }
-
   function refreshStatusText() {
     if (isCapturing) {
       if (isRecording) setStatus(t('stRec'), 'status-on');
@@ -251,23 +246,19 @@ document.addEventListener('DOMContentLoaded', () => {
       else setStatus(t('stOn'), 'status-on');
     } else setStatus(t('stOff'), 'status-off');
   }
-
   function setUIActive(active) {
     isCapturing = active; toggleBtn.classList.toggle('active', active); statusIndicator.classList.toggle('led-on', active); hero.classList.toggle('is-on', active);
     if (!active && !manualMode) { moveSat(0, -1); updateMoveBar(); }
     refreshStatusText();
   }
-
   function showMessage(msg, isError = false) {
     setStatus(msg, isError ? 'status-error' : 'status-on'); clearTimeout(messageTimeout); messageTimeout = setTimeout(refreshStatusText, 3500);
   }
-
   const ORBIT_W = 186, ORBIT_H = 68;
   function moveSat(x, z) {
     const px = ORBIT_W / 2 + Math.max(-1, Math.min(1, x)) * (ORBIT_W / 2), py = ORBIT_H / 2 + Math.max(-1, Math.min(1, z)) * (ORBIT_H / 2);
     sat.style.left = px + 'px'; sat.style.top = py + 'px'; sat.style.transform = `scale(${(0.8 + 0.4 * ((z + 1) / 2)).toFixed(2)})`;
   }
-
   function handleOrbitPointer(e) {
     const rect = orbit.getBoundingClientRect(), rx = rect.width / 2, rz = rect.height / 2;
     let nx = (e.clientX - rect.left - rx) / rx, nz = (e.clientY - rect.top - rz) / rz;
@@ -276,12 +267,10 @@ document.addEventListener('DOMContentLoaded', () => {
     manualMode = true; manualX = Number(nx.toFixed(2)); manualZ = Number(nz.toFixed(2));
     moveSat(manualX, manualZ); updateManualOrbitUI(); refreshStatusText(); markCustom(); pushParams();
   }
-
   orbit.addEventListener('pointerdown', (e) => { isDraggingOrbit = true; orbit.setPointerCapture(e.pointerId); handleOrbitPointer(e); });
   orbit.addEventListener('pointermove', (e) => { if (isDraggingOrbit) handleOrbitPointer(e); });
   orbit.addEventListener('pointerup', () => { isDraggingOrbit = false; });
   unlockOrbitBtn.addEventListener('click', () => { manualMode = false; updateManualOrbitUI(); refreshStatusText(); pushParams(); });
-
   function connectPort() {
     if (port) return;
     try { port = chrome.runtime.connect({ name: 'headspace-ui' }); } catch (e) { port = null; return; }
@@ -293,7 +282,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     port.onDisconnect.addListener(() => { void chrome.runtime.lastError; port = null; if (isCapturing && !busy) syncStatus(); });
   }
-
   async function updateMoveBar() {
     let show = false;
     if (isCapturing && engineTabId != null) {
@@ -301,36 +289,28 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     moveBar.style.display = show ? 'flex' : 'none';
   }
-
   function pushParams() {
     const params = readParams(); chrome.storage.local.set({ headspace_params: params });
     send({ action: 'UPDATE_PARAMS', target: 'offscreen', params }, 2500);
   }
-
   function markCustom() { presetSelect.value = 'custom'; chrome.storage.local.set({ headspace_preset: 'custom' }); }
-
   const fmtTime = (total) => `${String(Math.floor(total / 3600)).padStart(2, '0')}:${String(Math.floor((total % 3600) / 60)).padStart(2, '0')}:${String(total % 60).padStart(2, '0')}`;
-  
   function startTimer(epoch) {
     stopTimer(); const tick = () => { recordTimer.textContent = fmtTime(Math.max(0, Math.floor((Date.now() - epoch) / 1000))); };
     tick(); timerInterval = setInterval(tick, 250); recordTimer.style.color = 'var(--danger)';
   }
-
   function stopTimer() { if (timerInterval) { clearInterval(timerInterval); timerInterval = null; } recordTimer.style.color = ''; }
-
   function updateRecordUI() {
     recordBtn.classList.toggle('recording', isRecording);
     recordBtnText.textContent = isRecording ? 'STOP' : 'REC';
     downloadBtn.style.display = hasRecording && !isRecording ? 'block' : 'none';
     if (!isRecording) stopTimer();
   }
-
   async function startRecordingProcess() {
     const res = await send({ action: 'START_RECORDING', target: 'offscreen', format: recordFormat.value });
     if (!res || res.error) { showMessage(t('errPrefix') + errText(res && res.error), true); return; }
     isRecording = true; hasRecording = false; updateRecordUI(); startTimer(res.startedAt || Date.now()); refreshStatusText();
   }
-
   async function stopRecordingProcess() {
     recordBtn.disabled = true; recordBtnText.textContent = t('saving'); stopTimer();
     const res = await send({ action: 'STOP_RECORDING', target: 'offscreen' }, 20000);
@@ -338,7 +318,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (res && res.success) { hasRecording = !!res.hasRecording; showMessage(t('recDone')); } else showMessage(t('recFail'), true);
     updateRecordUI(); refreshStatusText();
   }
-
   async function syncStatus() {
     const st = await chrome.runtime.sendMessage({ action: 'GET_STATUS' }).catch(() => null);
     const capturing = !!(st && st.isCapturing); engineTabId = capturing && st.activeTabId != null ? st.activeTabId : null;
@@ -346,7 +325,74 @@ document.addEventListener('DOMContentLoaded', () => {
     setUIActive(capturing); updateRecordUI(); if (isRecording) startTimer(st.recordStartedAt || Date.now());
     updateMoveBar(); connectPort();
   }
-
+  function updateCustomPresetsDropdown() {
+    const group = $('myPresetsGroup');
+    group.innerHTML = '';
+    const keys = Object.keys(customPresets);
+    if (keys.length === 0) {
+      group.style.display = 'none';
+    } else {
+      group.style.display = 'block';
+      keys.forEach(name => {
+        const opt = document.createElement('option');
+        opt.value = 'my_' + name;
+        opt.textContent = name;
+        group.appendChild(opt);
+      });
+    }
+  }
+  function showModal(id) {
+    $('modalOverlay').classList.add('show');
+    document.querySelectorAll('.modal-box').forEach(m => m.classList.remove('show'));
+    $(id).classList.add('show');
+  }
+  function hideModals() {
+    $('modalOverlay').classList.remove('show');
+  }
+  document.querySelectorAll('.modal-close').forEach(btn => { btn.addEventListener('click', hideModals); });
+  $('btnSavePreset').addEventListener('click', () => { $('presetNameInput').value = ''; showModal('modalSave'); });
+  $('btnConfirmSave').addEventListener('click', () => {
+    const name = $('presetNameInput').value.trim();
+    if (!name) return;
+    customPresets[name] = readParams();
+    chrome.storage.local.set({ headspace_custom: customPresets });
+    updateCustomPresetsDropdown();
+    presetSelect.value = 'my_' + name;
+    chrome.storage.local.set({ headspace_preset: presetSelect.value });
+    hideModals();
+  });
+  $('btnExportPreset').addEventListener('click', () => {
+    const params = readParams();
+    const jsonStr = JSON.stringify(params);
+    const code = 'HSP_' + btoa(jsonStr);
+    $('exportCodeOutput').value = code;
+    showModal('modalExport');
+  });
+  $('btnCopyExport').addEventListener('click', () => {
+    const area = $('exportCodeOutput');
+    area.select(); document.execCommand('copy');
+    $('btnCopyExport').textContent = '✅ Copiado!';
+    setTimeout(() => { $('btnCopyExport').textContent = t('mdlCopy'); }, 2000);
+  });
+  $('btnImportPreset').addEventListener('click', () => { $('importCodeInput').value = ''; showModal('modalImport'); });
+  $('btnConfirmImport').addEventListener('click', () => {
+    const code = $('importCodeInput').value.trim();
+    if (code.startsWith('HSP_')) {
+      try {
+        const jsonStr = atob(code.replace('HSP_', ''));
+        const params = JSON.parse(jsonStr);
+        const randomName = "Importado " + Math.floor(Math.random() * 1000);
+        customPresets[randomName] = params;
+        chrome.storage.local.set({ headspace_custom: customPresets });
+        updateCustomPresetsDropdown();
+        presetSelect.value = 'my_' + randomName;
+        chrome.storage.local.set({ headspace_preset: presetSelect.value });
+        writeParamsToUI(params);
+        pushParams();
+        hideModals();
+      } catch (e) { $('importCodeInput').value = 'ERRO: Código inválido!'; }
+    } else { $('importCodeInput').value = 'ERRO: O código deve começar com HSP_'; }
+  });
   document.querySelectorAll('.tab').forEach((tab) => {
     tab.addEventListener('click', () => {
       document.querySelectorAll('.tab').forEach((x) => x.classList.remove('active'));
@@ -354,9 +400,7 @@ document.addEventListener('DOMContentLoaded', () => {
       tab.classList.add('active'); const target = $(tab.getAttribute('data-target')); if (target) target.classList.add('active');
     });
   });
-
   document.querySelectorAll('.lang-btn').forEach((btn) => { btn.addEventListener('click', () => { applyLanguage(btn.dataset.lang); chrome.storage.local.set({ headspace_lang: lang }); }); });
-
   dirPills.forEach((btn) => {
     btn.addEventListener('click', () => {
       const dir = btn.dataset.dir; selects.direction.value = dir; syncDirPills(dir);
@@ -364,7 +408,6 @@ document.addEventListener('DOMContentLoaded', () => {
       markCustom(); pushParams();
     });
   });
-
   toggleBtn.addEventListener('click', async () => {
     if (busy) return; busy = true; toggleBtn.disabled = true; setStatus(t('wait'), 'status-on');
     try {
@@ -380,7 +423,6 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     } catch (err) { showMessage(t('errPrefix') + err.message, true); await syncStatus(); } finally { toggleBtn.disabled = false; busy = false; }
   });
-
   moveBtn.addEventListener('click', async () => {
     if (busy) return; busy = true; moveBtn.disabled = true;
     try {
@@ -389,12 +431,17 @@ document.addEventListener('DOMContentLoaded', () => {
       pushParams(); await syncStatus(); showMessage(t('moved'));
     } catch (err) { showMessage(t('errPrefix') + err.message, true); await syncStatus(); } finally { moveBtn.disabled = false; busy = false; }
   });
-
   presetSelect.addEventListener('change', () => {
-    const name = presetSelect.value; chrome.storage.local.set({ headspace_preset: name });
-    if (!PRESETS[name]) return; manualMode = false; writeParamsToUI(PRESETS[name]); pushParams();
+    const val = presetSelect.value; 
+    chrome.storage.local.set({ headspace_preset: val });
+    manualMode = false;
+    if (val.startsWith('my_')) {
+      const name = val.replace('my_', '');
+      if (customPresets[name]) { writeParamsToUI(customPresets[name]); pushParams(); }
+    } else if (PRESETS[val]) {
+      writeParamsToUI(PRESETS[val]); pushParams();
+    }
   });
-
   SLIDER_KEYS.forEach((k) => { 
     sliders[k].addEventListener('input', () => { 
       const display = $(`val_${k}`); 
@@ -409,44 +456,41 @@ document.addEventListener('DOMContentLoaded', () => {
       setSliderFill(sliders[k]); 
       markCustom(); 
       pushParams(); 
-      
       if (k === 'playbackSpeed') {
         chrome.runtime.sendMessage({ action: 'SET_PLAYBACK_SPEED', speed: val / 100 }).catch(()=>{});
       }
     }); 
   });
-  
   spatialModeSelect.addEventListener('change', () => { updateHrtfVisibility(); markCustom(); pushParams(); });
   selects.hrtfPath.addEventListener('change', () => { manualMode = false; updateManualOrbitUI(); markCustom(); pushParams(); });
   selects.character.addEventListener('change', () => { const ch = selects.character.value; if (CHAR_PRESET_TUNING[ch]) writeParamsToUI(CHAR_PRESET_TUNING[ch]); updateRadioBoxVisibility(); markCustom(); pushParams(); });
   ['reverbType', 'ambience'].forEach((k) => { selects[k].addEventListener('change', () => { markCustom(); pushParams(); }); });
   recordFormat.addEventListener('change', updateRecordUI);
-  binauralToggle.addEventListener('change', () => { updateBinauralUI(); pushParams(); });
+  binauralToggle.addEventListener('change', () => { updateBinauralUI(); markCustom(); pushParams(); });
+  smartVolumeToggle.addEventListener('change', () => { markCustom(); pushParams(); });
   selects.binauralPreset.addEventListener('change', pushParams);
-
   resetBtn.addEventListener('click', () => {
-    presetSelect.value = '8d-rotation'; binauralToggle.checked = false; selects.binauralPreset.value = 'focus'; manualMode = false;
+    presetSelect.value = '8d-rotation'; binauralToggle.checked = false; smartVolumeToggle.checked = false; selects.binauralPreset.value = 'focus'; manualMode = false;
     chrome.storage.local.set({ headspace_preset: '8d-rotation' }); writeParamsToUI(PRESETS['8d-rotation']); pushParams();
   });
-
   recordBtn.addEventListener('click', async () => {
     if (busy) return;
     if (!isCapturing && !isRecording) { await syncStatus(); if (!isCapturing) { showMessage(t('needEngine'), true); return; } }
     busy = true; try { if (isRecording) await stopRecordingProcess(); else await startRecordingProcess(); } finally { busy = false; }
   });
-
   downloadBtn.addEventListener('click', async () => {
     const res = await send({ action: 'GET_RECORDING', target: 'offscreen' });
     if (!res || res.error) { showMessage(errText(res && res.error), true); return; }
     const a = document.createElement('a'); a.href = res.url; a.download = res.filename; document.body.appendChild(a); a.click(); a.remove(); chrome.action.setBadgeText({ text: '' }).catch(() => {});
   });
-
   setInterval(() => { if (!port) connectPort(); }, 1500);
-
   createStars(); moveSat(0, -1); applyLanguage(detectLanguage()); SLIDER_KEYS.forEach((k) => setSliderFill(sliders[k]));
-
   (async () => {
-    const stored = await chrome.storage.local.get(['headspace_params', 'headspace_preset', 'headspace_extras', 'headspace_lang']);
+    const stored = await chrome.storage.local.get(['headspace_params', 'headspace_preset', 'headspace_extras', 'headspace_lang', 'headspace_custom']);
+    if (stored.headspace_custom) {
+      customPresets = stored.headspace_custom;
+      updateCustomPresetsDropdown();
+    }
     if (stored.headspace_lang) applyLanguage(stored.headspace_lang);
     const saved = { ...DEFAULTS, ...(stored.headspace_params || {}) };
     if (stored.headspace_extras) {
@@ -455,14 +499,18 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     writeParamsToUI(saved);
     const savedPreset = stored.headspace_preset;
-    if (savedPreset && Array.from(presetSelect.options).some((o) => o.value === savedPreset)) presetSelect.value = savedPreset;
+    if (savedPreset) {
+      if (savedPreset.startsWith('my_') && customPresets[savedPreset.replace('my_', '')]) {
+        presetSelect.value = savedPreset;
+      } else if (Array.from(presetSelect.options).some((o) => o.value === savedPreset)) {
+        presetSelect.value = savedPreset;
+      }
+    }
     await syncStatus();
-
     const localVer = chrome.runtime.getManifest().version;
     const vDisp = $('versionDisplay');
     if (vDisp) vDisp.textContent = 'v' + localVer;
-
-    fetch('https://raw.githubusercontent.com/JohnIohananDev/headspace-8d/main/manifest.json', { cache: 'no-store' })
+    fetch('https://raw.githubusercontent.com/JohnIohananDev/headspace-8d.EXT/main/manifest.json', { cache: 'no-store' })
       .then((r) => r.json())
       .then((rem) => {
         const rv = rem.version.split('.').map(Number);
@@ -477,7 +525,7 @@ document.addEventListener('DOMContentLoaded', () => {
           const banner = $('updateBanner');
           if (banner) {
             banner.textContent = t('updateAvail').replace('{v}', rem.version);
-            banner.href = 'https://github.com/JohnIohananDev/headspace-8d';
+            banner.href = 'https://github.com/JohnIohananDev/headspace-8d.EXT';
             banner.style.display = 'block';
           }
         }
