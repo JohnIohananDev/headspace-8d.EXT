@@ -20,7 +20,7 @@
           <button type="button" class="lang-btn" id="langPt" data-lang="pt">PT</button>
           <button type="button" class="lang-btn" id="langEn" data-lang="en">EN</button>
         </div>
-        <button id="toggleBtn" class="power-btn" data-i18n-title="powerTitle" title="Ligar / desligar o motor">
+        <button id="toggleBtn" class="power-btn" data-i18n-title="powerTitle" title="Ligar / desligar">
           <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
             <path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path>
             <line x1="12" y1="2" x2="12" y2="12"></line>
@@ -42,7 +42,7 @@
       </div>
       <div class="hero-status-row">
         <span id="statusText" class="status-off">Bypass</span>
-        <button type="button" id="unlockOrbitBtn" class="unlock-pill" style="display: none;" data-i18n="unlockOrbit">↻ Voltar a girar</button>
+        <button type="button" id="unlockOrbitBtn" class="unlock-pill" style="display: none;" data-i18n="unlockOrbit">Voltar a girar</button>
       </div>
     </section>
 
@@ -55,24 +55,27 @@
       <div class="preset-row">
         <label for="presetSelect" data-i18n="preset">Preset</label>
         <select id="presetSelect" class="clean-select">
-          <optgroup id="myPresetsGroup" data-i18n-label="grpCustom" label="Meus Efeitos (Salvos)"></optgroup>
+          <optgroup id="myPresetsGroup" data-i18n-label="grpCustom" label="Meus Efeitos"></optgroup>
           <optgroup data-i18n-label="grpClassic" label="Clássicos">
             <option value="8d-rotation" data-i18n="p_8d">8D Clássico</option>
             <option value="8d-extreme" data-i18n="p_8dExt">8D Extremo</option>
-            <option value="slowed-reverb" data-i18n="p_slowedReverb">Slowed + Reverb 🐌</option>
-            <option value="nightcore" data-i18n="p_nightcore">Speed Up / Nightcore ⚡</option>
+            <option value="8d-wide" data-i18n="p_8dWide">8D Super Largo</option>
+            <option value="echo-chamber" data-i18n="p_echoChamber">Câmara de Eco</option>
+            <option value="binaural-pan" data-i18n="p_binPan">Panner Binaural</option>
+            <option value="slowed-reverb" data-i18n="p_slowedReverb">Slowed + Reverb</option>
+            <option value="nightcore" data-i18n="p_nightcore">Speed Up / Nightcore</option>
             <option value="slow-ambient" data-i18n="p_slow">Ambiente Lento</option>
             <option value="fast-spin" data-i18n="p_fast">Rotação Rápida</option>
-            <option value="live-stadium" data-i18n="p_stadium">Show em Estádio 360°</option>
+            <option value="live-stadium" data-i18n="p_stadium">Show em Estádio</option>
             <option value="front-stage" data-i18n="p_stage">Palco Ao Vivo</option>
-            <option value="cinematic" data-i18n="p_cinematic">Cinemático / Épico</option>
+            <option value="cinematic" data-i18n="p_cinematic">Cinemático</option>
             <option value="vortex-3d" data-i18n="p_vortex">Vórtice 3D</option>
-            <option value="center-focus" data-i18n="p_center">Foco Central (Fixo)</option>
+            <option value="center-focus" data-i18n="p_center">Foco Central</option>
             <option value="bounce" data-i18n="p_bounce">Bounce Dinâmico</option>
             <option value="bass-boost" data-i18n="p_bass">Bass Boosted</option>
             <option value="concert-hall" data-i18n="p_concert">Sala de Concerto</option>
             <option value="studio" data-i18n="p_studio">Monitor de Estúdio</option>
-            <option value="asmr-whisper" data-i18n="p_asmr">ASMR (Sussurro 3D)</option>
+            <option value="asmr-whisper" data-i18n="p_asmr">ASMR (Sussurro)</option>
           </optgroup>
           <optgroup data-i18n-label="grpRelax" label="Relaxantes">
             <option value="cosmic-drift" data-i18n="p_cosmic">Deriva Cósmica</option>
@@ -85,38 +88,51 @@
             <option value="campfire" data-i18n="p_campfire">Fogueira Noturna</option>
             <option value="floating" data-i18n="p_floating">Flutuando no Espaço</option>
             <option value="soft-lullaby" data-i18n="p_lullaby">Canção de Ninar</option>
+            <option value="astral" data-i18n="p_astral">Viagem Astral</option>
+            <option value="cave" data-i18n="p_cave">Caverna de Cristal</option>
+            <option value="stream" data-i18n="p_stream">Riacho Sereno</option>
+            <option value="chimes" data-i18n="p_chimes">Sinos de Vento</option>
+            <option value="mountain" data-i18n="p_mountain">Topo da Montanha</option>
           </optgroup>
-          <optgroup data-i18n-label="grpParty" label="Festa / Outro Cômodo">
-            <option value="party-next-door" data-i18n="p_muffled">Festa ao Lado (Abafado)</option>
+          <optgroup data-i18n-label="grpParty" label="Festa / Cômodo">
+            <option value="party-next-door" data-i18n="p_muffled">Festa ao Lado</option>
             <option value="party-bathroom" data-i18n="p_bathroom">Banheiro da Festa</option>
             <option value="party-hallway" data-i18n="p_hallway">Corredor do Evento</option>
-            <option value="club-outside" data-i18n="p_clubOut">Fila da Balada (Lado de fora)</option>
-            <option value="neighbor-bass" data-i18n="p_neighbor">Vizinho Barulhento (Subgrave)</option>
+            <option value="club-outside" data-i18n="p_clubOut">Fila da Balada</option>
+            <option value="neighbor-bass" data-i18n="p_neighbor">Vizinho Barulhento</option>
             <option value="basement-party" data-i18n="p_basement">Festa no Porão</option>
             <option value="trunk-music" data-i18n="p_trunk">Som no Porta-Malas</option>
             <option value="empty-club" data-i18n="p_emptyClub">Balada Vazia</option>
+            <option value="distant-club" data-i18n="p_distClub">Balada Distante</option>
+            <option value="muffled-bass" data-i18n="p_muffBass">Grave Abafado</option>
+            <option value="empty-hall" data-i18n="p_emptyHall">Salão Vazio</option>
+            <option value="outside-party" data-i18n="p_outParty">Festa na Rua</option>
+            <option value="backstage" data-i18n="p_backstage">Bastidores</option>
           </optgroup>
-          <optgroup data-i18n-label="grpRetro" label="Retrô & Rádio">
-            <option value="walkman-90s" data-i18n="p_walkman">Walkman Anos 90 8D</option>
-            <option value="old-radio" data-i18n="p_radio">Rádio Velho 8D (com chiado)</option>
-            <option value="old-radio-clean" data-i18n="p_radioClean">Rádio Velho 8D (limpo)</option>
+          <optgroup data-i18n-label="grpRetro" label="Retrô e Rádio">
+            <option value="walkman-90s" data-i18n="p_walkman">Walkman Anos 90</option>
+            <option value="old-radio" data-i18n="p_radio">Rádio Velho (Chiado)</option>
+            <option value="old-radio-clean" data-i18n="p_radioClean">Rádio Velho (Limpo)</option>
             <option value="am-radio" data-i18n="p_amRadio">Rádio AM Anos 50</option>
             <option value="vinyl-night" data-i18n="p_vinyl">Noite de Vinil</option>
             <option value="vhs-tape" data-i18n="p_vhs">Fita VHS Nostálgica</option>
             <option value="lofi-tape" data-i18n="p_tape">Lo-fi Fita Cassete</option>
-            <option value="underwater-8d" data-i18n="p_underwater">Submerso (Debaixo d'água)</option>
+            <option value="underwater-8d" data-i18n="p_underwater">Submerso</option>
             <option value="phone-8d" data-i18n="p_phone">Telefone 8D</option>
             <option value="old-tv" data-i18n="p_oldTv">TV de Tubo</option>
             <option value="megaphone" data-i18n="p_megaphone">Megafone Distorcido</option>
             <option value="space-comms" data-i18n="p_spaceComms">Comunicação Espacial</option>
+            <option value="broken-speaker" data-i18n="p_brokSpeak">Alto-falante Quebrado</option>
+            <option value="old-tape" data-i18n="p_oldTape">Fita Desgastada</option>
+            <option value="vintage-tv" data-i18n="p_vinTv">TV Vintage</option>
           </optgroup>
-          <option value="custom" data-i18n="p_custom">Personalizado (Não salvo)</option>
+          <option value="custom" data-i18n="p_custom">Personalizado...</option>
         </select>
       </div>
       <div class="preset-actions">
-        <button id="btnSavePreset" class="btn-micro">💾 <span data-i18n="btnSavePre">Salvar</span></button>
-        <button id="btnExportPreset" class="btn-micro">📤 <span data-i18n="btnExportPre">Exportar</span></button>
-        <button id="btnImportPreset" class="btn-micro">📥 <span data-i18n="btnImportPre">Importar</span></button>
+        <button id="btnSavePreset" class="btn-micro"><span data-i18n="btnSavePre">Salvar</span></button>
+        <button id="btnExportPreset" class="btn-micro"><span data-i18n="btnExportPre">Exportar</span></button>
+        <button id="btnImportPreset" class="btn-micro"><span data-i18n="btnImportPre">Importar</span></button>
       </div>
     </div>
 
@@ -133,7 +149,7 @@
         <div class="control-group">
           <label for="spatialMode" data-i18n="engine3d">Engine 3D</label>
           <select id="spatialMode" class="clean-select block">
-            <option value="hrtf" data-i18n="modeHrtf">Binaural HRTF (Imersão Total)</option>
+            <option value="hrtf" data-i18n="modeHrtf">Binaural HRTF</option>
             <option value="surround" data-i18n="modeSurround">Surround 3-Bandas</option>
             <option value="standard" data-i18n="modeStereo">Estéreo Simples</option>
           </select>
@@ -144,25 +160,25 @@
           <select id="hrtfPath" class="clean-select block">
             <option value="orbit" data-i18n="pathOrbit">Órbita Circular</option>
             <option value="figure8" data-i18n="pathFig8">Figura em 8</option>
-            <option value="spiral" data-i18n="pathSpiral">Espiral (aproxima e afasta)</option>
-            <option value="vortex" data-i18n="pathVortex">Vórtice 3D (sobe e desce)</option>
-            <option value="stage" data-i18n="pathStage">Palco Frontal (ao vivo)</option>
-            <option value="stadium" data-i18n="pathStadium">Arena / Estádio 360°</option>
+            <option value="spiral" data-i18n="pathSpiral">Espiral</option>
+            <option value="vortex" data-i18n="pathVortex">Vórtice 3D</option>
+            <option value="stage" data-i18n="pathStage">Palco Frontal</option>
+            <option value="stadium" data-i18n="pathStadium">Estádio 360</option>
             <option value="heartbeat" data-i18n="pathHeartbeat">Pulso Cardíaco</option>
-            <option value="pendulum" data-i18n="pathPendulum">Pêndulo (balanço suave)</option>
-            <option value="halo" data-i18n="pathHalo">Halo (acima da cabeça)</option>
-            <option value="drift" data-i18n="pathDrift">Wander (Aleatório)</option>
+            <option value="pendulum" data-i18n="pathPendulum">Pêndulo</option>
+            <option value="halo" data-i18n="pathHalo">Halo</option>
+            <option value="drift" data-i18n="pathDrift">Wander</option>
             <option value="zigzag" data-i18n="pathZigzag">Zigue-zague</option>
             <option value="chaos" data-i18n="pathChaos">Caos Total</option>
           </select>
         </div>
 
         <div class="control-group">
-          <label data-i18n="spinDir">Lado / Direção do Giro 8D</label>
+          <label data-i18n="spinDir">Lado / Direção</label>
           <div class="dir-pills" role="group">
-            <button type="button" class="dir-pill active" data-dir="cw" data-i18n="dirCw">↻ Direita (Horário)</button>
-            <button type="button" class="dir-pill" data-dir="ccw" data-i18n="dirCcw">↺ Esquerda (Anti-hor.)</button>
-            <button type="button" class="dir-pill" data-dir="pingpong" data-i18n="dirPing">⇄ Vai e Volta</button>
+            <button type="button" class="dir-pill active" data-dir="cw" data-i18n="dirCw">Direita</button>
+            <button type="button" class="dir-pill" data-dir="ccw" data-i18n="dirCcw">Esquerda</button>
+            <button type="button" class="dir-pill" data-dir="pingpong" data-i18n="dirPing">Vai e Volta</button>
           </div>
           <select id="direction" style="display: none;">
             <option value="cw">cw</option>
@@ -177,21 +193,21 @@
         </div>
 
         <div class="slider-group">
-          <div class="slider-info"><label for="speed" data-i18n="speed">Velocidade (Giro)</label><span id="val_speed" class="val-mono">15%</span></div>
+          <div class="slider-info"><label for="speed" data-i18n="speed">Velocidade</label><span id="val_speed" class="val-mono">15%</span></div>
           <input type="range" id="speed" class="pro-slider" min="0" max="100" value="15">
         </div>
       </div>
 
       <div id="panel-tone" class="panel">
         <div class="slider-group" style="border-color: rgba(143, 233, 255, 0.4);">
-          <div class="slider-info"><label for="playbackSpeed" data-i18n="playbackSpeed" style="color: var(--aqua); font-weight: bold;">Música: Slowed / Speed Up</label><span id="val_playbackSpeed" class="val-mono">1.00x</span></div>
+          <div class="slider-info"><label for="playbackSpeed" data-i18n="playbackSpeed" style="color: var(--aqua); font-weight: bold;">Música: Velocidade</label><span id="val_playbackSpeed" class="val-mono">1.00x</span></div>
           <input type="range" id="playbackSpeed" class="pro-slider" min="50" max="150" value="100">
         </div>
         
         <div class="toggle-card">
           <div class="toggle-info">
             <label for="smartVolumeToggle" data-i18n="smartVol">Volume Inteligente</label>
-            <span class="sub" id="smartVolumeStatus" data-i18n="smartVolSub">Protege contra distorção em batidas fortes</span>
+            <span class="sub" id="smartVolumeStatus" data-i18n="smartVolSub">Protege contra distorção</span>
           </div>
           <label class="switch">
             <input type="checkbox" id="smartVolumeToggle">
@@ -210,108 +226,108 @@
         </div>
 
         <div class="slider-group">
-          <div class="slider-info"><label for="warmth" data-i18n="warmth">Calor (som aveludado)</label><span id="val_warmth" class="val-mono">0%</span></div>
+          <div class="slider-info"><label for="warmth" data-i18n="warmth">Calor</label><span id="val_warmth" class="val-mono">0%</span></div>
           <input type="range" id="warmth" class="pro-slider" min="0" max="100" value="0">
         </div>
 
         <div class="slider-group">
-          <div class="slider-info"><label for="reverb" data-i18n="room">Reverb (Tamanho da sala)</label><span id="val_reverb" class="val-mono">25%</span></div>
+          <div class="slider-info"><label for="reverb" data-i18n="room">Reverb</label><span id="val_reverb" class="val-mono">25%</span></div>
           <input type="range" id="reverb" class="pro-slider" min="0" max="100" value="25">
         </div>
 
         <div class="control-group">
           <label for="reverbType" data-i18n="reverbType">Tipo de reverb</label>
           <select id="reverbType" class="clean-select block">
-            <option value="classic" data-i18n="rvClassic">Sala (clássico)</option>
+            <option value="classic" data-i18n="rvClassic">Sala Clássica</option>
             <option value="hall" data-i18n="rvHall">Salão</option>
             <option value="cathedral" data-i18n="rvCathedral">Catedral</option>
-            <option value="space" data-i18n="rvSpace">Espaço profundo</option>
+            <option value="space" data-i18n="rvSpace">Espaço Profundo</option>
           </select>
         </div>
       </div>
 
       <div id="panel-fx" class="panel">
         <div class="control-group">
-          <label for="character" data-i18n="character">Efeito de Rádio / Época</label>
+          <label for="character" data-i18n="character">Filtro Acústico</label>
           <select id="character" class="clean-select block">
             <option value="off" data-i18n="chOff">Desligado</option>
             <option value="walkman" data-i18n="chWalkman">Walkman Anos 90</option>
-            <option value="radio" data-i18n="chRadio">Rádio velho (limpo)</option>
-            <option value="radio-noise" data-i18n="chRadioNoise">Rádio velho (com chiado)</option>
-            <option value="radio-am" data-i18n="chRadioAm">Rádio AM Anos 50</option>
-            <option value="vinyl" data-i18n="chVinyl">Vinil antigo</option>
-            <option value="tape" data-i18n="chTape">Fita cassete Lo-Fi</option>
-            <option value="vhs" data-i18n="chVhs">Fita VHS antiga</option>
-            <option value="gramophone" data-i18n="chGramophone">Gramofone clássico</option>
-            <option value="phone" data-i18n="chPhone">Telefone suave</option>
-            <option value="underwater" data-i18n="chUnderwater">Submerso (debaixo d'água)</option>
-            <option value="muffled" data-i18n="chMuffled">Abafado (festa ao lado)</option>
-            <option value="bathroom" data-i18n="chBathroom">Acústica de Banheiro</option>
-            <option value="hallway" data-i18n="chHallway">Acústica de Corredor</option>
-            <option value="old-tv" data-i18n="chOldTv">TV de Tubo Analógica</option>
-            <option value="megaphone" data-i18n="chMegaphone">Megafone Distorcido</option>
+            <option value="radio" data-i18n="chRadio">Rádio (Limpo)</option>
+            <option value="radio-noise" data-i18n="chRadioNoise">Rádio (Chiado)</option>
+            <option value="radio-am" data-i18n="chRadioAm">Rádio AM</option>
+            <option value="vinyl" data-i18n="chVinyl">Vinil Antigo</option>
+            <option value="tape" data-i18n="chTape">Fita Cassete</option>
+            <option value="vhs" data-i18n="chVhs">Fita VHS</option>
+            <option value="gramophone" data-i18n="chGramophone">Gramofone</option>
+            <option value="phone" data-i18n="chPhone">Telefone</option>
+            <option value="underwater" data-i18n="chUnderwater">Submerso</option>
+            <option value="muffled" data-i18n="chMuffled">Abafado (Festa)</option>
+            <option value="bathroom" data-i18n="chBathroom">Banheiro</option>
+            <option value="hallway" data-i18n="chHallway">Corredor</option>
+            <option value="old-tv" data-i18n="chOldTv">TV de Tubo</option>
+            <option value="megaphone" data-i18n="chMegaphone">Megafone</option>
           </select>
 
           <div class="slider-info inline">
-            <label for="characterAmount" data-i18n="charAmount">Intensidade do efeito</label><span id="val_characterAmount" class="val-mono">100%</span>
+            <label for="characterAmount" data-i18n="charAmount">Intensidade do filtro</label><span id="val_characterAmount" class="val-mono">100%</span>
           </div>
           <input type="range" id="characterAmount" class="pro-slider" min="0" max="100" value="100">
 
           <div id="radioCustomBox" class="radio-sub-box">
             <div class="slider-info inline">
-              <label for="charTone" data-i18n="charTone">Filtro do Rádio</label><span id="val_charTone" class="val-mono">60%</span>
+              <label for="charTone" data-i18n="charTone">Ajuste de Tom</label><span id="val_charTone" class="val-mono">60%</span>
             </div>
             <input type="range" id="charTone" class="pro-slider" min="0" max="100" value="60">
 
             <div class="slider-info inline">
-              <label for="charDrive" data-i18n="charDrive">Saturação / Válvula</label><span id="val_charDrive" class="val-mono">25%</span>
+              <label for="charDrive" data-i18n="charDrive">Distorção / Válvula</label><span id="val_charDrive" class="val-mono">25%</span>
             </div>
             <input type="range" id="charDrive" class="pro-slider" min="0" max="100" value="25">
 
             <div class="slider-info inline">
-              <label for="charNoise" data-i18n="charNoise">Chiado e Estalos</label><span id="val_charNoise" class="val-mono">35%</span>
+              <label for="charNoise" data-i18n="charNoise">Ruídos e Estalos</label><span id="val_charNoise" class="val-mono">35%</span>
             </div>
             <input type="range" id="charNoise" class="pro-slider" min="0" max="100" value="35">
           </div>
         </div>
 
         <div class="slider-group">
-          <div class="slider-info"><label for="chorus" data-i18n="ethereal">Etéreo (chorus)</label><span id="val_chorus" class="val-mono">0%</span></div>
+          <div class="slider-info"><label for="chorus" data-i18n="ethereal">Etéreo (Chorus)</label><span id="val_chorus" class="val-mono">0%</span></div>
           <input type="range" id="chorus" class="pro-slider" min="0" max="100" value="0">
         </div>
 
         <div class="slider-group">
-          <div class="slider-info"><label for="echo" data-i18n="echo">Eco ping-pong</label><span id="val_echo" class="val-mono">0%</span></div>
+          <div class="slider-info"><label for="echo" data-i18n="echo">Eco Ping-Pong</label><span id="val_echo" class="val-mono">0%</span></div>
           <input type="range" id="echo" class="pro-slider" min="0" max="100" value="0">
         </div>
 
         <div class="slider-group">
-          <div class="slider-info"><label for="waves" data-i18n="tide">Maré (filtro respirando)</label><span id="val_waves" class="val-mono">0%</span></div>
+          <div class="slider-info"><label for="waves" data-i18n="tide">Maré (Filtro)</label><span id="val_waves" class="val-mono">0%</span></div>
           <input type="range" id="waves" class="pro-slider" min="0" max="100" value="0">
         </div>
       </div>
 
       <div id="panel-brain" class="panel">
         <div class="control-group">
-          <label for="ambience" data-i18n="ambience">Som ambiente</label>
+          <label for="ambience" data-i18n="ambience">Som Ambiente</label>
           <select id="ambience" class="clean-select block">
             <option value="off" data-i18n="chOff">Desligado</option>
             <option value="rain" data-i18n="ambRain">Chuva</option>
-            <option value="ocean" data-i18n="ambOcean">Ondas do mar</option>
+            <option value="ocean" data-i18n="ambOcean">Ondas do Mar</option>
             <option value="wind" data-i18n="ambWind">Vento</option>
-            <option value="brown" data-i18n="ambBrown">Ruído marrom (calmante)</option>
-            <option value="drone" data-i18n="ambDrone">Drone cósmico</option>
+            <option value="brown" data-i18n="ambBrown">Ruído Marrom</option>
+            <option value="drone" data-i18n="ambDrone">Drone Cósmico</option>
           </select>
           <div class="slider-info inline">
-            <label for="ambienceVol" data-i18n="ambVol">Volume do ambiente</label><span id="val_ambienceVol" class="val-mono">35%</span>
+            <label for="ambienceVol" data-i18n="ambVol">Volume do Ambiente</label><span id="val_ambienceVol" class="val-mono">35%</span>
           </div>
           <input type="range" id="ambienceVol" class="pro-slider" min="0" max="100" value="35">
         </div>
 
         <div class="toggle-card">
           <div class="toggle-info">
-            <label for="binauralToggle" data-i18n="binaural">Ondas binaurais</label>
-            <span class="sub" id="binauralStatus">Frequências cerebrais de fundo</span>
+            <label for="binauralToggle" data-i18n="binaural">Ondas Binaurais</label>
+            <span class="sub" id="binauralStatus">Frequências de fundo</span>
           </div>
           <label class="switch">
             <input type="checkbox" id="binauralToggle">
@@ -320,7 +336,7 @@
         </div>
 
         <div class="control-group">
-          <label for="binauralPreset" data-i18n="mentalState">Estado mental</label>
+          <label for="binauralPreset" data-i18n="mentalState">Estado Mental</label>
           <select id="binauralPreset" class="clean-select block">
             <option value="focus" data-i18n="bFocus">Foco Extremo (Beta)</option>
             <option value="relax" data-i18n="bRelax">Relaxamento (Alfa)</option>
@@ -328,15 +344,15 @@
             <option value="sleep" data-i18n="bSleep">Sono Profundo (Delta)</option>
           </select>
         </div>
-        <p class="hint" data-i18n="binauralHint">Use fones de ouvido: as ondas binaurais só funcionam com um som diferente em cada ouvido.</p>
+        <p class="hint" data-i18n="binauralHint">Use fones de ouvido para as ondas binaurais.</p>
       </div>
 
       <div id="panel-tape" class="panel">
         <div class="control-group">
-          <label for="recordFormat" data-i18n="outFormat">Formato de saída (Sem Vídeo)</label>
+          <label for="recordFormat" data-i18n="outFormat">Formato de Saída</label>
           <select id="recordFormat" class="clean-select block">
             <option value="compressed" data-i18n="fmtWebm">Áudio Leve (M4A / WebM)</option>
-            <option value="wav" data-i18n="fmtWav">WAV Áudio (sem compressão)</option>
+            <option value="wav" data-i18n="fmtWav">WAV (Sem Compressão)</option>
           </select>
         </div>
 
@@ -374,7 +390,7 @@
   <div id="modalOverlay" class="modal-overlay">
     <div id="modalSave" class="modal-box">
       <h3 data-i18n="mdlSaveTitle">Nome do seu Efeito</h3>
-      <input type="text" id="presetNameInput" class="modal-input" placeholder="Ex: Meu Grave Bolado">
+      <input type="text" id="presetNameInput" class="modal-input" placeholder="Ex: Meu Efeito Bolado">
       <div class="modal-actions">
         <button class="btn-micro outline modal-close" data-i18n="mdlCancel">Cancelar</button>
         <button id="btnConfirmSave" class="btn-micro solid" data-i18n="mdlSave">Salvar</button>
