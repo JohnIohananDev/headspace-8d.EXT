@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "HeadSpace 8D",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "Processa o áudio da aba ativa em tempo real com efeitos espaciais 8D, reverbs, ambientes relaxantes e ondas binaurais.",
   "permissions": [
     "activeTab",
