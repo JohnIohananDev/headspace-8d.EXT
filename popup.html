@@ -58,18 +58,21 @@
           <optgroup id="myPresetsGroup" data-i18n-label="grpCustom" label="Meus Efeitos (Salvos)"></optgroup>
           <optgroup data-i18n-label="grpClassic" label="Clássicos">
             <option value="8d-rotation" data-i18n="p_8d">8D Clássico</option>
+            <option value="8d-extreme" data-i18n="p_8dExt">8D Extremo</option>
             <option value="slowed-reverb" data-i18n="p_slowedReverb">Slowed + Reverb 🐌</option>
             <option value="nightcore" data-i18n="p_nightcore">Speed Up / Nightcore ⚡</option>
             <option value="slow-ambient" data-i18n="p_slow">Ambiente Lento</option>
             <option value="fast-spin" data-i18n="p_fast">Rotação Rápida</option>
             <option value="live-stadium" data-i18n="p_stadium">Show em Estádio 360°</option>
             <option value="front-stage" data-i18n="p_stage">Palco Ao Vivo</option>
+            <option value="cinematic" data-i18n="p_cinematic">Cinemático / Épico</option>
             <option value="vortex-3d" data-i18n="p_vortex">Vórtice 3D</option>
             <option value="center-focus" data-i18n="p_center">Foco Central (Fixo)</option>
             <option value="bounce" data-i18n="p_bounce">Bounce Dinâmico</option>
             <option value="bass-boost" data-i18n="p_bass">Bass Boosted</option>
             <option value="concert-hall" data-i18n="p_concert">Sala de Concerto</option>
             <option value="studio" data-i18n="p_studio">Monitor de Estúdio</option>
+            <option value="asmr-whisper" data-i18n="p_asmr">ASMR (Sussurro 3D)</option>
           </optgroup>
           <optgroup data-i18n-label="grpRelax" label="Relaxantes">
             <option value="cosmic-drift" data-i18n="p_cosmic">Deriva Cósmica</option>
@@ -77,11 +80,21 @@
             <option value="deep-ocean" data-i18n="p_ocean">Oceano Profundo</option>
             <option value="night-rain" data-i18n="p_rain">Chuva Noturna</option>
             <option value="deep-sleep" data-i18n="p_sleep">Sono Profundo</option>
+            <option value="forest-walk" data-i18n="p_forest">Caminhada na Floresta</option>
+            <option value="zen-temple" data-i18n="p_zen">Templo Zen</option>
+            <option value="campfire" data-i18n="p_campfire">Fogueira Noturna</option>
+            <option value="floating" data-i18n="p_floating">Flutuando no Espaço</option>
+            <option value="soft-lullaby" data-i18n="p_lullaby">Canção de Ninar</option>
           </optgroup>
           <optgroup data-i18n-label="grpParty" label="Festa / Outro Cômodo">
             <option value="party-next-door" data-i18n="p_muffled">Festa ao Lado (Abafado)</option>
             <option value="party-bathroom" data-i18n="p_bathroom">Banheiro da Festa</option>
             <option value="party-hallway" data-i18n="p_hallway">Corredor do Evento</option>
+            <option value="club-outside" data-i18n="p_clubOut">Fila da Balada (Lado de fora)</option>
+            <option value="neighbor-bass" data-i18n="p_neighbor">Vizinho Barulhento (Subgrave)</option>
+            <option value="basement-party" data-i18n="p_basement">Festa no Porão</option>
+            <option value="trunk-music" data-i18n="p_trunk">Som no Porta-Malas</option>
+            <option value="empty-club" data-i18n="p_emptyClub">Balada Vazia</option>
           </optgroup>
           <optgroup data-i18n-label="grpRetro" label="Retrô & Rádio">
             <option value="walkman-90s" data-i18n="p_walkman">Walkman Anos 90 8D</option>
@@ -93,14 +106,17 @@
             <option value="lofi-tape" data-i18n="p_tape">Lo-fi Fita Cassete</option>
             <option value="underwater-8d" data-i18n="p_underwater">Submerso (Debaixo d'água)</option>
             <option value="phone-8d" data-i18n="p_phone">Telefone 8D</option>
+            <option value="old-tv" data-i18n="p_oldTv">TV de Tubo</option>
+            <option value="megaphone" data-i18n="p_megaphone">Megafone Distorcido</option>
+            <option value="space-comms" data-i18n="p_spaceComms">Comunicação Espacial</option>
           </optgroup>
           <option value="custom" data-i18n="p_custom">Personalizado (Não salvo)</option>
         </select>
       </div>
       <div class="preset-actions">
-        <button id="btnSavePreset" class="btn-micro" data-i18n="btnSavePre">💾 Salvar</button>
-        <button id="btnExportPreset" class="btn-micro" data-i18n="btnExportPre">📤 Exportar</button>
-        <button id="btnImportPreset" class="btn-micro" data-i18n="btnImportPre">📥 Importar</button>
+        <button id="btnSavePreset" class="btn-micro">💾 <span data-i18n="btnSavePre">Salvar</span></button>
+        <button id="btnExportPreset" class="btn-micro">📤 <span data-i18n="btnExportPre">Exportar</span></button>
+        <button id="btnImportPreset" class="btn-micro">📥 <span data-i18n="btnImportPre">Importar</span></button>
       </div>
     </div>
 
@@ -232,6 +248,8 @@
             <option value="muffled" data-i18n="chMuffled">Abafado (festa ao lado)</option>
             <option value="bathroom" data-i18n="chBathroom">Acústica de Banheiro</option>
             <option value="hallway" data-i18n="chHallway">Acústica de Corredor</option>
+            <option value="old-tv" data-i18n="chOldTv">TV de Tubo Analógica</option>
+            <option value="megaphone" data-i18n="chMegaphone">Megafone Distorcido</option>
           </select>
 
           <div class="slider-info inline">
@@ -377,7 +395,7 @@
       <textarea id="exportCodeOutput" class="modal-input area" readonly></textarea>
       <div class="modal-actions">
         <button class="btn-micro outline modal-close" data-i18n="mdlClose">Fechar</button>
-        <button id="btnCopyExport" class="btn-micro solid" data-i18n="mdlCopy">Copiar Código</button>
+        <button id="btnCopyExport" class="btn-micro solid" data-i18n="mdlCopy">Copiar</button>
       </div>
     </div>
   </div>
