@@ -398,9 +398,9 @@ color: var(--text-muted);
 
 .preset-actions {
 display: grid;
-grid-template-columns: 1fr 1fr 1fr;
+grid-template-columns: repeat(3, 1fr);
 gap: 8px;
-padding: 0 12px 12px 12px;
+padding: 8px 12px 12px 12px;
 }
 
 .btn-micro {
