@@ -78,7 +78,9 @@ const CHARACTERS = {
   'underwater': { hp: 20, lp: 420, pf: 180, pg: 2.5, pq: 0.8, drive: 1.0, wob: 0.0008, wobHz: 0.25, hiss: 0, pops: 0 },
   'muffled': { hp: 40, lp: 350, pf: 100, pg: 0, pq: 1, drive: 0.01, wob: 0, wobHz: 0, hiss: 0, pops: 0 },
   'bathroom': { hp: 100, lp: 250, pf: 100, pg: 0, pq: 1, drive: 0.01, wob: 0, wobHz: 0, hiss: 0, pops: 0 },
-  'hallway': { hp: 60, lp: 450, pf: 100, pg: 0, pq: 1, drive: 0.01, wob: 0, wobHz: 0, hiss: 0, pops: 0 }
+  'hallway': { hp: 60, lp: 450, pf: 100, pg: 0, pq: 1, drive: 0.01, wob: 0, wobHz: 0, hiss: 0, pops: 0 },
+  'old-tv': { hp: 150, lp: 4500, pf: 1000, pg: 1.5, pq: 0.8, drive: 1.5, wob: 0.001, wobHz: 0.2, hiss: 0.05, pops: 0.02 },
+  'megaphone': { hp: 700, lp: 3000, pf: 1500, pg: 4.0, pq: 1.2, drive: 2.5, wob: 0, wobHz: 0, hiss: 0.08, pops: 0 }
 };
 const HRTF_TRIM = 1.35;
 const HRTF_SPREAD_RAD = 0.32;
